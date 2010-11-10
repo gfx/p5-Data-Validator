@@ -1,0 +1,35 @@
+This is Perl module Data::Validator.
+
+INSTALLATION
+
+Install cpanm (App::cpanminus) and then run the following command to install
+Data::Validator:
+
+    $ cpanm Data::Validator
+
+If you get an archive of this distribution, unpack it and build it
+as per the usual:
+
+    $ tar xzf Data-Validator-$version.tar.gz
+    $ cd Data-Validator-$version
+    $ perl Makefile.PL
+    $ make && make test
+
+Then install it:
+
+    $ make install
+
+DOCUMENTATION
+
+Data::Validator documentation is available as in POD. So you can do:
+
+    $ perldoc Data::Validator
+
+to read the documentation online with your favorite pager.
+
+LICENSE AND COPYRIGHT
+
+Copyright (c) 2010, gfx. All rights reserved.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.

@@ -1,0 +1,17 @@
+# for Data-Validator
+# Makefile.PL
+Module::Install
+Module::Install::AuthorTests
+Module::Install::Repository
+
+# author's tests
+Test::Pod
+Test::Pod::Coverage
+Test::Spelling
+Test::Perl::Critic
+Test::Synopsis
+
+# Release tools
+ShipIt
+ShipIt::Step::ChangeAllVersions
+CPAN::Uploader

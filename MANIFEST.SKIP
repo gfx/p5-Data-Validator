@@ -1,0 +1,8 @@
+#!include_default
+
+# skip author's files
+\bauthor\b
+
+\.bs$
+\.o(?:|bj|ld|ut)$
+nytprof
