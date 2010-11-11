@@ -39,8 +39,10 @@ sub BUILDARGS {
             exists($rule->{$attr}) and $used++;
         }
         if($used < keys %{$rule}) {
+            my @unknowns = grep { not exists $rule_attrs{$_} }
+                keys %{$rule};
             Carp::croak("Unknown attributes in a validation rule for '$name': "
-                . $class->_unknown(\%rule_attrs, $rule));
+                . Mouse::Util::quoted_english_list(@unknowns) );
         }
 
         # setup the rule
@@ -158,7 +160,7 @@ sub validate {
     &Internals::SvREADONLY($args, 1);
 
     if($used < $nargs) {
-        return $self->unknown_parameters($rules, $args);
+        return $self->found_unknown_parameters($rules, $args);
     }
     return $args;
 }
@@ -167,8 +169,19 @@ __PACKAGE__->meta->add_method( initialize => \&Mouse::Object::BUILDARGS );
 
 sub unknown_parameters {
     my($self, $rules, $args) = @_;
+    my %knowns  = map { $_->{name} => undef } @{$rules};
+    return map {
+        !exists $knowns{$_}
+            ? ($_ => delete $args->{$_})
+            : ()
+    } keys %{$args};
+}
+
+sub found_unknown_parameters {
+    my($self, $rules, $args) = @_;
+    my %unknowns = $self->unknown_parameters($rules, $args);
     $self->throw_error("Unknown parameters: "
-        . $self->_unknown({ map { $_->{name} => undef } @{$rules} }, $args) );
+        . Mouse::Util::quoted_english_list(keys %unknowns) );
 }
 
 sub throw_error {
@@ -191,8 +204,6 @@ sub _apply_type_constraint {
 
 sub _unknown {
     my($self, $knowns, $params) = @_;
-    my @unknowns = grep { not exists $knowns->{$_} } keys %{$params};
-    return Mouse::Util::quoted_english_list(@unknowns);
 }
 
 

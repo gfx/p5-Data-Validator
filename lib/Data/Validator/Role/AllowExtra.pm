@@ -4,15 +4,9 @@ use Mouse::Role;
 sub parse_whole_args { 0 }
 
 # returns($args, %extra_args)
-around unknown_parameters => sub {
+around found_unknown_parameters => sub {
     my($next, $self, $rules, $args) = @_;
-    my %knowns = map { $_->{name} => undef } @{$rules};
-    return( $args,
-        map {
-            !exists $knowns{$_}
-                ? ($_ => delete $args->{$_})
-                : ()
-        } keys %{$args} );
+    return( $args, $self->unknown_parameters($rules, $args) );
 };
 
 no Mouse::Role;
