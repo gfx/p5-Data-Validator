@@ -282,8 +282,6 @@ Currently the following methods are extensible.
 
 =head2 C<< $validator->initialize(@args) :HashRef >>
 
-=head2 C<< $validator->finalize(@args) :List >>
-
 =head2 C<< $validator->throw_error($message :Str) >>
 
 =head1 TODO
