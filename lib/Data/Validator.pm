@@ -21,11 +21,12 @@ my %rule_attrs = map { $_ => undef }
     qw(isa does default optional xor);
 
 sub BUILDARGS {
-    my $class = shift;
-    my $mapping = $class->Mouse::Object::BUILDARGS(@_);
+    my($class, @mapping) = @_;
+
+    my %xor;
 
     my @rules;
-    while(my($name, $rule) = each %{$mapping}) {
+    while(my($name, $rule) = splice @mapping, 0, 2) {
         if(!Mouse::Util::TypeConstraints::HashRef($rule)) {
             $rule = { isa => $rule };
         }
@@ -36,10 +37,17 @@ sub BUILDARGS {
             exists($rule->{$attr}) and $used++;
         }
         if($used < keys %{$rule}) {
-            $class->_report_unknown_args(\%rule_attrs, $rule);
+            Carp::croak("Unknown attributes in a validation rule for '$name': "
+                . $class->_unknown(\%rule_attrs, $rule));
         }
 
         # setup the rule
+        if(defined $rule->{xor}) {
+            $xor{$name} = Mouse::Util::TypeConstraints::ArrayRef($rule->{xor})
+                    ?  $rule->{xor}
+                    : [$rule->{xor}];
+            $rule->{optional} = 1;
+        }
 
         if(!exists $rule->{default}) {
             $rule->{default} = undef if delete $rule->{optional};
@@ -61,27 +69,68 @@ sub BUILDARGS {
 
         $rule->{name} = $name;
 
-        &Internals::SvREADONLY($rule);
         push @rules, $rule;
+    }
+
+    # to check xor first and only once, move xor configuration into front rules
+    if(%xor) {
+        my %byname = map { $_->{name} => $_ } @rules;
+        while(my($this, $others) = each %xor) {
+            foreach my $other_name(@{$others}) {
+                my $other_rule = $byname{$other_name}
+                    || Carp::croak("Unknown parameter name '$other_name'"
+                        . " specified as exclusive-or by '$this'");
+                exists $other_rule->{default}
+                    or $other_rule->{default} = undef;
+
+                push @{$other_rule->{xor} ||= []}, $this;
+            }
+        }
     }
 
     return { rules => \@rules };
 }
 
+sub ARGS {
+    shift()->Mouse::Object::BUILDARGS(@_);
+}
+
 sub validate {
     my $self = shift;
-    my $args = $self->Mouse::Object::BUILDARGS(@_);
+    my $args = $self->ARGS(@_);
 
     my $rules = $self->rules;
 
-    my $used = 0;
+    my %skip;
+
+    my $nargs = scalar keys %{$args};
+    my $used  = 0;
     foreach my $rule(@{ $rules }) {
         my $name = $rule->{name};
+        next if exists $skip{$name};
+
         if(defined(my $value = $args->{$name})) {
             $self->_apply_rule($rule, \$value);
+            if($rule->{xor}) {
+                foreach my $other_name( @{ $rule->{xor} } ) {
+                    if(defined $args->{$other_name}) {
+                        my $exclusive = Mouse::Util::quoted_english_list(
+                            grep { defined $args->{$_} } @{$rule->{xor}} );
+                        $self->throw_error(
+                            "Exclusive parameters specified:"
+                            . " '$name' v.s. $exclusive");
+                    }
+                    $skip{$other_name}++;
+
+                    # setup placeholder for hash restriction
+                    $args->{$other_name} = undef;
+                }
+            }
             $used++;
         }
         elsif(exists $rule->{default}) {
+            $used++ if exists $args->{$name};
+
             my $default = $rule->{default};
             $args->{$name} = Mouse::Util::TypeConstraints::CodeRef($default)
                 ? $default->()
@@ -93,8 +142,10 @@ sub validate {
         }
     }
 
-    if($used < keys %{$args}) {
-        $self->_report_unknown_args({ map { $_ => undef } @{$rules} }, $args);
+    if($used < $nargs) {
+        use Data::Dump qw(dump); dump([$used, $nargs]);
+        $self->throw_error("Unknown prameters: "
+            . $self->_unknown({ map { $_ => undef } @{$rules} }, $args) );
     }
 
     &Internals::SvREADONLY($args, 1); # makes it immutable
@@ -115,11 +166,10 @@ sub _apply_rule {
     return;
 }
 
-sub _report_unknown_args {
+sub _unknown {
     my($self, $knowns, $params) = @_;
     my @unknowns = grep { not exists $knowns->{$_} } keys %{$params};
-    $self->throw_error("Unknown arguments: "
-        . Mouse::Util::quoted_english_list(@unknowns) );
+    return Mouse::Util::quoted_english_list(@unknowns);
 }
 
 sub throw_error {

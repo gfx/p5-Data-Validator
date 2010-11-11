@@ -5,7 +5,7 @@ use Test::More;
 use Data::Validator;
 
 my $v = Data::Validator->new(
-    foo => 'Num',
+    foo => { isa => 'Num', default => 99 },
 );
 isa_ok $v, 'Data::Validator';
 
@@ -15,12 +15,14 @@ is_deeply $args, { foo => 42 };
 $args = $v->validate({ foo => 3.14 });
 is_deeply $args, { foo => 3.14 };
 
-note 'failing cases';
+$args = $v->validate({ foo => undef });
+is_deeply $args, { foo => 99 };
 
-eval {
-    $v->validate();
-};
-like $@, qr/Missing parameter named 'foo'/, 'missing parameters';
+$args = $v->validate();
+is_deeply $args, { foo => 99 };
+
+
+note 'failing cases';
 
 eval {
     $v->validate({foo => 'bar'});

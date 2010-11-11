@@ -10,6 +10,7 @@ Data-Validator-*
 Makefile*
 !Makefile.PL
 *blib
+MYMETA.yml
 META.yml
 inc/
 MANIFEST

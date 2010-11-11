@@ -6,3 +6,4 @@
 \.bs$
 \.o(?:|bj|ld|ut)$
 nytprof
+MYMETA\.yml$

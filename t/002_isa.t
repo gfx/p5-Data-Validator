@@ -5,7 +5,7 @@ use Test::More;
 use Data::Validator;
 
 my $v = Data::Validator->new(
-    foo => 'Num',
+    foo => { isa => 'Num' },
 );
 isa_ok $v, 'Data::Validator';
 
