@@ -213,6 +213,7 @@ This document describes Data::Validator version 0.01.
     use 5.10.0;
     use Data::Validator;
 
+    # for functions
     sub get {
         state $rule = Data::Validator->new(
             uri        => { isa => 'Str', xor => [qw(schema host path_query)] },
@@ -227,7 +228,43 @@ This document describes Data::Validator version 0.01.
         my $args = $rule->validate(@_);
         # ...
     }
+    get( uri => 'http://example.com/' );
 
+    # for methods
+    sub method {
+        state $rule = Data::Validator->new(
+            foo => 'Str',
+        )->with('Method');
+
+        my($self, $args) = $rule->validate(@_);
+        # ...
+    }
+    Foo->method( foo => 'bar' );
+
+
+    # using sequenced parameters
+    sub seq {
+        state $rule = Data::Validator->new(
+            foo => 'Str',
+        )->with('Sequenced');
+
+        my $args = $rule->validate(@_);
+        # ...
+    }
+    seq( 'bar' );          # seq() will get { foo => 'bar' }
+    seq({ foo => 'bar' }); # named style are available!
+
+
+    # both Method and Sequenced
+    sub seq_method {
+        state $rule = Data::Validator->new(
+            foo => 'Str',
+        )->with('Method', 'Sequenced');
+
+        my($args = $rule->validate(@_);
+        # ...
+    }
+    Foo->seq_method( 'bar' ); # seq() will get { foo => 'bar' }
 
 =head1 DESCRIPTION
 
