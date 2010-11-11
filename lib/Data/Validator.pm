@@ -17,6 +17,8 @@ has rules => (
     required => 1,
 );
 
+no Mouse;
+
 my %rule_attrs = map { $_ => undef }
     qw(isa does default optional xor);
 
@@ -91,11 +93,23 @@ sub BUILDARGS {
     return { rules => \@rules };
 }
 
-__PACKAGE__->meta->add_method( ARGS => \&Mouse::Object::BUILDARGS );
+sub with {
+    my($self, @roles) = @_;
+    foreach my $role(@roles) {
+        $role = Mouse::Util::load_first_existing_class(
+            __PACKAGE__ . '::Role::' . $role,
+            $role,
+        );
+    }
+    @roles = sort { $b->parse_whole_args <=> $a->parse_whole_args } @roles;
+    Mouse::Util::apply_all_roles($self,
+        map { $_ => { -excludes => 'parse_whole_args' } } @roles);
+    return $self;
+}
 
 sub validate {
     my $self = shift;
-    my $args = $self->ARGS(@_);
+    my $args = $self->initialize(@_);
 
     my $rules = $self->rules;
 
@@ -143,13 +157,25 @@ sub validate {
     }
 
     if($used < $nargs) {
-        use Data::Dump qw(dump); dump([$used, $nargs]);
         $self->throw_error("Unknown prameters: "
             . $self->_unknown({ map { $_ => undef } @{$rules} }, $args) );
     }
 
-    &Internals::SvREADONLY($args, 1); # makes it immutable
+    return $self->finalize($args);
+}
+
+__PACKAGE__->meta->add_method( initialize => \&Mouse::Object::BUILDARGS );
+
+sub finalize {
+    my($self, $args) = @_;
+    &Internals::SvREADONLY($args, 1);
     return $args;
+}
+
+sub throw_error {
+    my($self, $message) = @_;
+    local $Carp::CarpLevel = $Carp::CarpLevel = 1;
+    Carp::croak($message);
 }
 
 sub _apply_type_constraint {
@@ -170,13 +196,7 @@ sub _unknown {
     return Mouse::Util::quoted_english_list(@unknowns);
 }
 
-sub throw_error {
-    my($self, $message) = @_;
-    local $Carp::CarpLevel = $Carp::CarpLevel = 1;
-    Carp::croak($message);
-}
 
-no Mouse;
 __PACKAGE__->meta->make_immutable;
 __END__
 
