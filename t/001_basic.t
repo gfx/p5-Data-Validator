@@ -15,6 +15,9 @@ is_deeply $args, { foo => 42 };
 $args = $v->validate({ foo => 3.14 });
 is_deeply $args, { foo => 3.14 };
 
+$args = $v->validate( foo => 3.14 );
+is_deeply $args, { foo => 3.14 };
+
 note 'failing cases';
 
 eval {
@@ -26,5 +29,10 @@ eval {
     $v->validate({foo => 'bar'});
 };
 like $@, qr/Validation failed for 'Num' with value bar/, 'validation falure';
+
+eval {
+    $v->validate({ foo => 0, baz => 42, qux => 100 });
+};
+like $@, qr/Unknown parameters: 'baz' and 'qux' at/;
 
 done_testing;

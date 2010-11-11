@@ -155,17 +155,21 @@ sub validate {
             $self->throw_error("Missing parameter named '$name'");
         }
     }
+    &Internals::SvREADONLY($args, 1);
 
     if($used < $nargs) {
-        $self->throw_error("Unknown prameters: "
-            . $self->_unknown({ map { $_ => undef } @{$rules} }, $args) );
+        return $self->unknown_parameters($rules, $args);
     }
-
-    &Internals::SvREADONLY($args, 1);
     return $args;
 }
 
 __PACKAGE__->meta->add_method( initialize => \&Mouse::Object::BUILDARGS );
+
+sub unknown_parameters {
+    my($self, $rules, $args) = @_;
+    $self->throw_error("Unknown parameters: "
+        . $self->_unknown({ map { $_->{name} => undef } @{$rules} }, $args) );
+}
 
 sub throw_error {
     my($self, $message) = @_;
