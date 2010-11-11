@@ -219,6 +219,25 @@ This document describes Data::Validator version 0.01.
 
 # TODO
 
+=head1 TODO
+
+=over
+
+=item *
+
+Validators for methods which deal with invocants (I<$class> and I<$self>).
+
+=item *
+
+Sequencial parameters; C<< foo(1, 2) >> makes C<< { x => 1, y => 2 } >>.
+
+=item *
+
+Smart parameters; C<< foo(1, 2) >> as sequencial, C<< foo({ x => 1, y => 2 })
+as named.
+
+=back
+
 =head1 DEPENDENCIES
 
 Perl 5.8.1 or later.
