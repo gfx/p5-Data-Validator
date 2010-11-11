@@ -110,7 +110,9 @@ sub validate {
         next if exists $skip{$name};
 
         if(defined(my $value = $args->{$name})) {
-            $self->_apply_rule($rule, \$value);
+            $self->_apply_type_constraint($rule, \$value)
+                if exists $rule->{type};
+
             if($rule->{xor}) {
                 foreach my $other_name( @{ $rule->{xor} } ) {
                     if(defined $args->{$other_name}) {
@@ -152,18 +154,16 @@ sub validate {
     return $args;
 }
 
-sub _apply_rule {
+sub _apply_type_constraint {
     my($self, $rule, $value_ref) = @_;
-    if(defined(my $tc = $rule->{type})) {
-        return if $tc->check(${$value_ref});
+    my $tc = $rule->{type};
+    return if $tc->check(${$value_ref});
 
-        if($rule->{should_coercion}) {
-            ${$value_ref} = $tc->coerce(${$value_ref});
-            return if $tc->check(${$value_ref});
-        }
-        $self->throw_error( $tc->get_message(${$value_ref}) );
+    if($rule->{should_coercion}) {
+        ${$value_ref} = $tc->coerce(${$value_ref});
+        return if $tc->check(${$value_ref});
     }
-    return;
+    $self->throw_error( $tc->get_message(${$value_ref}) );
 }
 
 sub _unknown {
