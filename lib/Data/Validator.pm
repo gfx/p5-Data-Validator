@@ -161,16 +161,11 @@ sub validate {
             . $self->_unknown({ map { $_ => undef } @{$rules} }, $args) );
     }
 
-    return $self->finalize($args);
-}
-
-__PACKAGE__->meta->add_method( initialize => \&Mouse::Object::BUILDARGS );
-
-sub finalize {
-    my($self, $args) = @_;
     &Internals::SvREADONLY($args, 1);
     return $args;
 }
+
+__PACKAGE__->meta->add_method( initialize => \&Mouse::Object::BUILDARGS );
 
 sub throw_error {
     my($self, $message) = @_;
