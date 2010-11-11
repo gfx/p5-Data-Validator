@@ -121,8 +121,8 @@ sub validate {
         my $name = $rule->{name};
         next if exists $skip{$name};
 
-        if(defined(my $value = $args->{$name})) {
-            $self->_apply_type_constraint($rule, \$value)
+        if(defined($args->{$name})) {
+            $self->_apply_type_constraint($rule, \$args->{$name})
                 if exists $rule->{type};
 
             if($rule->{xor}) {
@@ -254,9 +254,9 @@ This document describes Data::Validator version 0.01.
     sub seq_method {
         state $rule = Data::Validator->new(
             foo => 'Str',
-        )->with('Method', 'Sequenced');
+        )->with( 'Method', 'Sequenced');
 
-        my($args = $rule->validate(@_);
+        my($self, $args) = $rule->validate(@_);
         # ...
     }
     Foo->seq_method( 'bar' ); # seq() will get { foo => 'bar' }
