@@ -102,6 +102,7 @@ XS
 validator
 validators
 invocants
+extentions
 
 versa # vice versa
 ish   # something-ish

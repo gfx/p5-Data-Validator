@@ -19,4 +19,11 @@ around initialize => sub {
 
 no Mouse::Role;
 1;
+__END__
+
+=head1 NAME
+
+Data::Validator::Role::Sequenced - Deals with sequenced parameters
+
+=cut
 
