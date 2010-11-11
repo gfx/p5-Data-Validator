@@ -1,0 +1,27 @@
+.shipit
+Changes
+example/simple.pl
+inc/Module/Install.pm
+inc/Module/Install/AuthorTests.pm
+inc/Module/Install/Base.pm
+inc/Module/Install/Makefile.pm
+inc/Module/Install/Metadata.pm
+inc/Module/Install/Repository.pm
+inc/Module/Install/WriteAll.pm
+lib/Data/.Validator.pm.swp
+lib/Data/Validator.pm
+Makefile.PL
+MANIFEST			This list of files
+MANIFEST.SKIP
+META.yml
+README
+t/000_load.t
+t/001_basic.t
+t/002_isa.t
+t/003_default.t
+t/004_xor.t
+xt/perlcritic.t
+xt/pod.t
+xt/podcoverage.t
+xt/podspell.t
+xt/podsynopsis.t

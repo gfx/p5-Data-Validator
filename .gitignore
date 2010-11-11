@@ -13,7 +13,6 @@ Makefile*
 MYMETA.yml
 META.yml
 inc/
-MANIFEST
 *.out
 *.bak
 *.old
