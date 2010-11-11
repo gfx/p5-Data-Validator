@@ -202,7 +202,7 @@ __END__
 
 =head1 NAME
 
-Data::Validator - Rule based validator
+Data::Validator - Rule based validator on type constraint subsystem
 
 =head1 VERSION
 
@@ -268,11 +268,28 @@ This document describes Data::Validator version 0.01.
 
 =head1 DESCRIPTION
 
-# TODO
+This is yet another validation library, based on C<Smart::Args> but
+less smart.
+
+B<< Any API will change without notice >>.
 
 =head1 INTERFACE
 
-# TODO
+=head2 C<< Data::Validator->new(@rules) :Validator >>
+
+=head2 C<< $validator->validate(@args) :HashRef >>
+
+=head1 EXTENTIONS
+
+You can extends validators with C<Mouse::Role>.
+
+Currently the following methods are extensible.
+
+=head2 C<< $validator->initialize(@args) :HashRef >>
+
+=head2 C<< $validator->finalize(@args) :List >>
+
+=head2 C<< $validator->throw_error($message :Str) >>
 
 =head1 TODO
 
