@@ -184,7 +184,7 @@ __END__
 
 =head1 NAME
 
-Data::Validator - Perl extention to do something
+Data::Validator - Rule based validator
 
 =head1 VERSION
 
@@ -192,7 +192,24 @@ This document describes Data::Validator version 0.01.
 
 =head1 SYNOPSIS
 
+    use 5.10.0;
     use Data::Validator;
+
+    sub get {
+        state $rule = Data::Validator->new(
+            uri        => { isa => 'Str', xor => [qw(schema host path_query)] },
+
+            schema     => { isa => 'Str', default => 'http' },
+            host       => { isa => 'Str', default => '127.0.0.1' },
+            path_query => { isa => 'Str', default => '/' },
+
+            method     => { isa => 'Str', default => 'GET' },
+        );
+
+        my $args = $rule->validate(@_);
+        # ...
+    }
+
 
 =head1 DESCRIPTION
 
@@ -214,7 +231,13 @@ to cpan-RT.
 
 =head1 SEE ALSO
 
-L<Dist::Maker::Template::Mouse>
+L<Params::Validate>
+
+L<Smart::Args>
+
+L<Sub::Args>
+
+L<Mouse>
 
 =head1 AUTHOR
 
