@@ -91,9 +91,7 @@ sub BUILDARGS {
     return { rules => \@rules };
 }
 
-sub ARGS {
-    shift()->Mouse::Object::BUILDARGS(@_);
-}
+__PACKAGE__->meta->add_method( ARGS => \&Mouse::Object::BUILDARGS );
 
 sub validate {
     my $self = shift;
@@ -229,11 +227,11 @@ Validators for methods which deal with invocants (I<$class> and I<$self>).
 
 =item *
 
-Sequencial parameters; C<< foo(1, 2) >> makes C<< { x => 1, y => 2 } >>.
+Sequenced parameters; C<< foo(1, 2) >> makes C<< { x => 1, y => 2 } >>.
 
 =item *
 
-Smart parameters; C<< foo(1, 2) >> as sequencial, C<< foo({ x => 1, y => 2 })
+Smart parameters; C<< foo(1, 2) >> as sequenced, C<< foo({ x => 1, y => 2 }) >>
 as named.
 
 =back

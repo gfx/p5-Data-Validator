@@ -99,6 +99,9 @@ whitelist
 Whitelist
 workflow
 XS
+validator
+validators
+invocants
 
 versa # vice versa
 ish   # something-ish
