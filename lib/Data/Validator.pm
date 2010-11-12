@@ -123,7 +123,7 @@ sub validate {
         my $name = $rule->{name};
         next if exists $skip{$name};
 
-        if(defined($args->{$name})) {
+        if(exists $args->{$name}) {
             $self->_apply_type_constraint($rule, \$args->{$name})
                 if exists $rule->{type};
 
@@ -145,7 +145,6 @@ sub validate {
             $used++;
         }
         elsif(exists $rule->{default}) {
-            $used++ if exists $args->{$name};
 
             my $default = $rule->{default};
             $args->{$name} = Mouse::Util::TypeConstraints::CodeRef($default)

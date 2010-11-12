@@ -15,7 +15,7 @@ is_deeply $args, { foo => 42 };
 $args = $v->validate({ foo => 3.14 });
 is_deeply $args, { foo => 3.14 };
 
-$args = $v->validate({ foo => undef });
+$args = $v->validate(+{});
 is_deeply $args, { foo => 99 };
 
 $args = $v->validate();

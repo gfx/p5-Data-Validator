@@ -11,7 +11,6 @@ inc/Module/Install/Makefile.pm
 inc/Module/Install/Metadata.pm
 inc/Module/Install/Repository.pm
 inc/Module/Install/WriteAll.pm
-lib/Data/.Validator.pm.swp
 lib/Data/Validator.pm
 lib/Data/Validator/Role/AllowExtra.pm
 lib/Data/Validator/Role/Method.pm
@@ -28,6 +27,7 @@ t/003_default.t
 t/004_xor.t
 t/005_coerce.t
 t/006_moose_coerce.t
+t/007_immutable.t
 t/100_with.t
 t/101_method.t
 t/102_sequenced.t
@@ -35,6 +35,5 @@ t/103_method_sequenced.t
 t/104_extra_args.t
 xt/perlcritic.t
 xt/pod.t
-xt/podcoverage.t
 xt/podspell.t
 xt/podsynopsis.t
