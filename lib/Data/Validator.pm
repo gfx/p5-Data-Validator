@@ -133,7 +133,7 @@ sub validate {
             }
 
             if($rule->{xor}) {
-                # checks conflickts with exclusive arguments
+                # checks conflicts with exclusive arguments
                 foreach my $other_name( @{ $rule->{xor} } ) {
                     if(exists $args->{$other_name}) {
                         my $exclusive = Mouse::Util::quoted_english_list(
