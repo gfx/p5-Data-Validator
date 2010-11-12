@@ -426,6 +426,16 @@ a list of name-value pairs:
 
     my($args, %extra) = $rule->validate(@_);
 
+=head3 Confess
+
+Reports stack backtraces on errors.
+
+If you want to enable this in global, apply it to C<Data::Validator> directly:
+
+    Mouse::Util::apply_all_roles(
+        'Data::Validator' => 'Data::Validator::Role::Confess',
+    );
+
 =head1 DEPENDENCIES
 
 Perl 5.8.1 or later.
