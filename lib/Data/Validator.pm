@@ -248,7 +248,7 @@ sub apply_type_constraint {
         }
     }
 
-    return "Illegal value for '$rule->{name}' because: "
+    return "Invalid for '$rule->{name}': "
         . $tc->get_message(${$value_ref});
 }
 
