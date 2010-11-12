@@ -1,7 +1,6 @@
 package Data::Validator;
 use 5.008_001;
 use Mouse;
-use Mouse::Meta::Attribute       ();
 use Mouse::Util::TypeConstraints ();
 use Mouse::Util                  ();
 use Carp                         ();
@@ -246,7 +245,7 @@ This document describes Data::Validator version 0.01.
             uri        => { isa => 'Str', xor => [qw(schema host path_query)] },
 
             schema     => { isa => 'Str', default => 'http' },
-            host       => { isa => 'Str', default => '127.0.0.1' },
+            host       => { isa => 'Str' },
             path_query => { isa => 'Str', default => '/' },
 
             method     => { isa => 'Str', default => 'GET' },
@@ -306,34 +305,32 @@ B<< Any API will change without notice >>.
 
 =head2 C<< $validator->validate(@args) :HashRef >>
 
+=head2 C<< $validator->with(@roles) :Validator >>
+
 =head1 EXTENTIONS
 
-You can extends validators with C<Mouse::Role>.
+There are extentions which changes behaviours of C<validate()>.
 
-Currently the following methods are extensible.
+Extentions are defined as C<Mouse::Role>.
 
-=head2 C<< $validator->initialize(@args) :HashRef >>
+=head2 Method
 
-=head2 C<< $validator->throw_error($message :Str) >>
+Takes the first argument as a invocants (i.e. class or object instance),
+and returns it as the first value:
 
-=head1 TODO
+    my($invocant, $args) = $rule->validate(@_);
 
-=over
+=head2 Sequenced
 
-=item *
+Deals with arguments in sequenced style, where users should pass
+arguments by the order of argument rules, instead of by-name.
 
-Validators for methods which deal with invocants (I<$class> and I<$self>).
+=head3 AllowExtra
 
-=item *
+Regards unknown arguments as extra arguments, and returns them as
+a list of name-value pairs:
 
-Sequenced parameters; C<< foo(1, 2) >> makes C<< { x => 1, y => 2 } >>.
-
-=item *
-
-Smart parameters; C<< foo(1, 2) >> as sequenced, C<< foo({ x => 1, y => 2 }) >>
-as named.
-
-=back
+    my($args, %extra) = $rule->validate(@_);
 
 =head1 DEPENDENCIES
 
