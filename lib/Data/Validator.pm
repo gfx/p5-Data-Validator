@@ -257,7 +257,7 @@ __END__
 
 =head1 NAME
 
-Data::Validator - Rule based validator on type constraint subsystem
+Data::Validator - Rule based validator on type constraint system
 
 =head1 VERSION
 
@@ -340,7 +340,7 @@ Perl-ish.
 Thus, I have designed C<Data::Validator> in more Perl-ish way
 with full of C<Smart::Args> functionality.
 
-=item Basics on Mouse's type constraint system
+=item Basics on type constraint system
 
 Moose's type constraint system is awesome, and so is Mouse's. In fact,
 Mouse's type constraints are much faster than Moose's so that you need not
@@ -353,13 +353,13 @@ Thus, I have made C<Data::Validator> based on Mouse's type constraint system.
 Although I do not hesitate to depend on XS modules, some people think that
 XS modules are hard to install.
 
-Thus, I have written C<Data::Validator> in pure Perl and chosen required modules
-which work in pure Perl.
+Thus, I have written C<Data::Validator> in pure Perl and selected dependent
+modules which work in pure Perl.
 
 =item Performance
 
-I think validators should be as fast as possible because they are only
-important for illegal inputs.
+I think validators should be as fast as possible because they matter only
+or illegal inputs.
 
 This is much faster than C<Params::Validate>, which has an XS backend, though.
 
@@ -387,9 +387,9 @@ Attributes for I<$rule> are as follows:
 
 =back
 
-=head2 C<< $validator->with(@roles) :Validator >>
+=head2 C<< $validator->with(@extentions) :Validator >>
 
-Applies I<@roles> to I<$validator> and returns itself.
+Applies I<@extentions> to I<$validator> and returns itself.
 
 See L</EXTENTIONS> for details.
 
@@ -398,17 +398,15 @@ See L</EXTENTIONS> for details.
 Validates I<@args> and returns a restricted HASH reference.
 
 Restricted hashes are hashes which do not allow to access non-existing keys,
-so you must check a key C<exists> in the hash before fetching values.
+so you must check a key C<exists> in the hash before fetching its values.
 
 =head1 EXTENTIONS
 
 There are extentions which changes behaviours of C<validate()>.
 
-Extentions are defined as C<Mouse::Role>.
-
 =head2 Method
 
-Takes the first argument as a invocants (i.e. class or object instance),
+Takes the first argument as an invocant (i.e. class or object instance),
 and returns it as the first value:
 
     my($invocant, $args) = $rule->validate(@_);
