@@ -1,5 +1,10 @@
 Revision history for Perl extension Data::Validator
 
+0.02 2010-11-12 17:36:33
+    - No functionality changes
+    - Fix error messages
+    - Improve documents
+
 0.01 2010-11-12 14:58:04
     - original version; created by /home/gfx/perl5/perlbrew/bin/dim
       at Tue Nov  9 13:39:21 2010.

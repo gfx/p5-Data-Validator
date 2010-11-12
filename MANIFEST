@@ -30,6 +30,7 @@ t/005_coerce.t
 t/006_moose_coerce.t
 t/007_immutable.t
 t/008_optional.t
+t/009_misuse.t
 t/100_with.t
 t/101_method.t
 t/102_sequenced.t
