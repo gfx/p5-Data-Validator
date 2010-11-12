@@ -1,5 +1,8 @@
 Revision history for Perl extension Data::Validator
 
+0.03 2010-11-12 20:24:25
+    - Change error handling to report all the errors at once
+
 0.02 2010-11-12 17:36:33
     - No functionality changes
     - Fix error messages
