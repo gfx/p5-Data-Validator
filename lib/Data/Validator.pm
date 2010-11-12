@@ -20,7 +20,7 @@ has rules => (
 no Mouse;
 
 my %rule_attrs = map { $_ => undef }
-    qw(isa does default optional xor);
+    qw(isa does default optional xor documentation);
 
 sub BUILDARGS {
     my($class, @mapping) = @_;
@@ -50,11 +50,6 @@ sub BUILDARGS {
             $xor{$name} = Mouse::Util::TypeConstraints::ArrayRef($rule->{xor})
                     ?  $rule->{xor}
                     : [$rule->{xor}];
-            $rule->{optional} = 1;
-        }
-
-        if(!exists $rule->{default}) {
-            $rule->{default} = undef if delete $rule->{optional};
         }
 
         if(defined $rule->{isa}) {
@@ -84,8 +79,6 @@ sub BUILDARGS {
                 my $other_rule = $byname{$other_name}
                     || Carp::croak("Unknown parameter name '$other_name'"
                         . " specified as exclusive-or by '$this'");
-                exists $other_rule->{default}
-                    or $other_rule->{default} = undef;
 
                 push @{$other_rule->{xor} ||= []}, $this;
             }
@@ -114,9 +107,9 @@ sub validate {
     my $args = $self->initialize(@_);
 
     my $rules = $self->rules;
-
     my %skip;
 
+    my @missing;
     my $nargs = scalar keys %{$args};
     my $used  = 0;
     foreach my $rule(@{ $rules }) {
@@ -128,34 +121,59 @@ sub validate {
                 if exists $rule->{type};
 
             if($rule->{xor}) {
+                # checks conflickts with exclusive arguments
                 foreach my $other_name( @{ $rule->{xor} } ) {
-                    if(defined $args->{$other_name}) {
+                    if(exists $args->{$other_name}) {
                         my $exclusive = Mouse::Util::quoted_english_list(
-                            grep { defined $args->{$_} } @{$rule->{xor}} );
+                            grep { exists $args->{$_} } @{$rule->{xor}} );
                         $self->throw_error(
-                            "Exclusive parameters specified:"
+                            "Exclusive parameters passed together:"
                             . " '$name' v.s. $exclusive");
                     }
                     $skip{$other_name}++;
-
-                    # setup placeholder for hash restriction
-                    $args->{$other_name} = undef;
                 }
             }
             $used++;
         }
         elsif(exists $rule->{default}) {
-
             my $default = $rule->{default};
             $args->{$name} = Mouse::Util::TypeConstraints::CodeRef($default)
                 ? $default->()
                 : $default;
-            #XXX: should we apply rules to defaults?
         }
-        else {
-            $self->throw_error("Missing parameter named '$name'");
+        elsif(!$rule->{optional}) {
+            push @missing, $rule;
         }
     }
+
+    if(@missing) {
+        my @real_missing;
+        MISSING: foreach my $rule(@missing) {
+            my $name = $rule->{name};
+            next if exists $skip{$name};
+            next if exists $args->{$name};
+
+            my @xors;
+            if($rule->{xor}) {
+                foreach my $other_name(@{$rule->{xor}}) {
+                    next MISSING if exists $args->{$other_name};
+                    push @xors, $other_name;
+                }
+            }
+            push @real_missing, @xors
+                ? sprintf(q{'%s' (or %s)},
+                    $name, Mouse::Util::quoted_english_list(@xors) )
+                : sprintf(q{'%s'}, $name);
+        }
+
+        if(@real_missing) {
+            $self->throw_error(
+                'Missing parameters: '
+                . Mouse::Util::english_list(@real_missing)
+            );
+        }
+    }
+
     &Internals::SvREADONLY($args, 1);
 
     if($used < $nargs) {

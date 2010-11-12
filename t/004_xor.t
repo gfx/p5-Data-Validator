@@ -22,19 +22,15 @@ note 'success cases';
 $args = $v->validate({ uri => 'https://example.com/' });
 is_deeply $args, {
     uri        => 'https://example.com/',
-    schema     => undef,
-    host       => undef,
-    path_query => undef,
     method     => 'GET',
 };
 
 $args = $v->validate({
-   schema     => 'https',
-   host       => 'example.com',
-   path_query => '/index.html',
+    schema     => 'https',
+    host       => 'example.com',
+    path_query => '/index.html',
 });
 is_deeply $args, {
-    uri        => undef,
     schema     => 'https',
     host       => 'example.com',
     path_query => '/index.html',
@@ -45,17 +41,14 @@ $args = $v->validate({
     host => 'example.com',
 });
 is_deeply $args, {
-    uri        => undef,
     schema     => 'http',
     host       => 'example.com',
     path_query => '/',
     method     => 'GET',
 };
 
-$args = $v->validate({
-});
+$args = $v->validate();
 is_deeply $args, {
-    uri        => undef,
     schema     => 'http',
     host       => '127.0.0.1',
     path_query => '/',
@@ -67,12 +60,46 @@ note 'failure cases';
 eval {
     $v->validate({ uri => 'foo', schema => 'http' });
 };
-like $@, qr/Exclusive parameters specified: 'uri' v.s. 'schema' at/;
+like $@, qr/Exclusive parameters passed together: 'uri' v.s. 'schema' at/;
 
 eval {
-    $v->validate({ uri => 'foo', schema => 'http', host => 'example.com' });
+    $v->validate(uri => 'foo', schema => 'http', host => 'example.com');
 };
-like $@, qr/Exclusive parameters specified: 'uri' v.s. 'host' and 'schema' at/;
+like $@, qr/Exclusive parameters passed together: 'uri' v.s. 'host' and 'schema' at/;
+
+note 'case without defaults';
+$v = Data::Validator->new(
+    uri        => { xor => [qw(schema host path_query)] },
+
+    schema     => { default => 'http' },
+    host       => { },
+    path_query => { default => '/' },
+
+    method     => { default => 'GET' },
+);
+
+$args = $v->validate(
+    uri => 'http://example.com/',
+);
+is_deeply $args, {
+    uri        => 'http://example.com/',
+    method     => 'GET',
+};
+
+$args = $v->validate(
+    host => 'example.com',
+);
+is_deeply $args, {
+    schema     => 'http',
+    host       => 'example.com',
+    path_query => '/',
+    method     => 'GET',
+};
+
+eval {
+    $v->validate();
+};
+like $@, qr/Missing parameters: 'host' \(or 'uri'\) at/;
 
 done_testing;
 
