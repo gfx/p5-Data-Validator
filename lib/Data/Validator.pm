@@ -39,7 +39,8 @@ sub BUILDARGS {
         }
         if($used < keys %{$rule}) {
             my @unknowns = grep { not exists $rule_attrs{$_} }  keys %{$rule};
-            Carp::croak("Unknown attributes in a validation rule for '$name': "
+            Carp::croak("Wrong definition for '$name':"
+                . ' Unknown attributes: '
                 . Mouse::Util::quoted_english_list(@unknowns) );
         }
 
@@ -55,8 +56,8 @@ sub BUILDARGS {
         }
         if(defined $rule->{does}) {
             defined($rule->{type})
-                and Carp::croak("Rule error for '$name':"
-                    . " You cannot use 'isa' and 'does' at the same time");
+                and Carp::croak("Wrong definition for '$name':"
+                    . q{ You cannot use 'isa' and 'does' together});
             $rule->{type} = _does_tc(delete $rule->{does});
         }
 
@@ -75,8 +76,9 @@ sub BUILDARGS {
         while(my($this, $others) = each %xor) {
             foreach my $other_name(@{$others}) {
                 my $other_rule = $byname{$other_name}
-                    || Carp::croak("Unknown parameter name '$other_name'"
-                        . " specified as exclusive-or by '$this'");
+                    || Carp::croak("Wrong definition for '$this':"
+                        . " Unknown parameter name '$other_name'"
+                        . " specified as exclusive-or");
 
                 push @{$other_rule->{xor} ||= []}, $this;
             }
