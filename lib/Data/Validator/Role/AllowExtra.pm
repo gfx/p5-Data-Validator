@@ -3,10 +3,27 @@ use Mouse::Role;
 
 sub parse_whole_args { 0 }
 
-# returns($args, %extra_args)
-around found_unknown_parameters => sub {
+has extra_args => (
+    is         => 'rw',
+    isa        => 'ArrayRef',
+    auto_deref => 1,
+    lazy       => 1,
+    default    => sub { [] },
+    required   => 0,
+);
+
+around unknown_parameters => sub {
     my($next, $self, $rules, $args) = @_;
-    return( $args, $self->unknown_parameters($rules, $args) );
+    @{ $self->extra_args } = $self->$next($rules, $args);
+    return;
+};
+
+around validate => sub {
+    my($next, $self, @args) = @_;
+    my @retvals = $self->$next(@args);
+    push @retvals, $self->extra_args;
+    @{$self->extra_args} = ();
+    return @retvals;
 };
 
 no Mouse::Role;

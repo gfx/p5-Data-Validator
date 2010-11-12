@@ -24,12 +24,14 @@ note 'failing cases';
 eval {
     $v->validate({});
 };
-like $@, qr/Missing parameters: 'bar' and 'foo' at/, 'missing parameters';
+like $@, qr/Missing parameter: 'foo'/, 'missing parameters';
+like $@, qr/Missing parameter: 'bar'/, 'missing parameters';
 
 eval {
     $v->validate();
 };
-like $@, qr/Missing parameters: 'bar' and 'foo' at/, 'missing parameters';
+like $@, qr/Missing parameter: 'foo'/, 'missing parameters';
+like $@, qr/Missing parameter: 'bar'/, 'missing parameters';
 
 eval {
     $v->validate({foo => 'bar', bar => 1});
@@ -49,6 +51,6 @@ like $@, qr/Validation failed for 'Num' with value bar/, 'validation falure';
 eval {
     $v->validate(1, 2, 3, 4);
 };
-like $@, qr/Unknown parameters/;
+like $@, qr/Unknown parameter:/;
 
 done_testing;

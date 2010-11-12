@@ -8,7 +8,6 @@ around initialize => sub {
     shift; # original method; not used
     my $self = shift;
     my %args;
-
     if( @_ and Mouse::Util::TypeConstraints::HashRef($_[-1]) ) {
         %args = %{ pop @_ };
     }

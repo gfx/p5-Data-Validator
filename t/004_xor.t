@@ -60,12 +60,13 @@ note 'failure cases';
 eval {
     $v->validate({ uri => 'foo', schema => 'http' });
 };
-like $@, qr/Exclusive parameters passed together: 'uri' v.s. 'schema' at/;
+like $@, qr/Exclusive parameters passed together: 'uri' v.s. 'schema'/;
 
 eval {
     $v->validate(uri => 'foo', schema => 'http', host => 'example.com');
 };
-like $@, qr/Exclusive parameters passed together: 'uri' v.s. 'host' and 'schema' at/;
+like $@, qr/Exclusive parameters passed together: 'host' v.s. 'uri'/;
+like $@, qr/Exclusive parameters passed together: 'schema' v.s. 'uri'/;
 
 note 'case without defaults';
 $v = Data::Validator->new(
@@ -99,7 +100,7 @@ is_deeply $args, {
 eval {
     $v->validate();
 };
-like $@, qr/Missing parameters: 'host' \(or 'uri'\) at/;
+like $@, qr/Missing parameter: 'host' \(or 'uri'\)/;
 
 done_testing;
 

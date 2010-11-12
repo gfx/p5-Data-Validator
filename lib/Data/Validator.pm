@@ -109,16 +109,28 @@ sub validate {
     my $rules = $self->rules;
     my %skip;
 
+    my @errors;
     my @missing;
     my $nargs = scalar keys %{$args};
     my $used  = 0;
-    foreach my $rule(@{ $rules }) {
+    RULE: foreach my $rule(@{ $rules }) {
         my $name = $rule->{name};
-        next if exists $skip{$name};
+        next RULE if exists $skip{$name};
 
         if(exists $args->{$name}) {
-            $self->apply_type_constraint($rule, \$args->{$name})
-                if exists $rule->{type};
+
+            if(exists $rule->{type}) {
+                my $err = $self->apply_type_constraint($rule, \$args->{$name});
+                if($err) {
+                    push @errors, {
+                        type    => 'InvalidValue',
+                        message => $err,
+                        rule    => $rule,
+                        value   => $args->{$name},
+                    };
+                    next RULE;
+                }
+            }
 
             if($rule->{xor}) {
                 # checks conflickts with exclusive arguments
@@ -126,9 +138,13 @@ sub validate {
                     if(exists $args->{$other_name}) {
                         my $exclusive = Mouse::Util::quoted_english_list(
                             grep { exists $args->{$_} } @{$rule->{xor}} );
-                        $self->throw_error(
-                            "Exclusive parameters passed together:"
-                            . " '$name' v.s. $exclusive");
+                        push @errors, {
+                            type    => 'ExclusiveParameter',
+                            message => "Exclusive parameters passed together:"
+                                     . " '$name' v.s. $exclusive",
+                            rule    => $rule,
+                        };
+                        next RULE;
                     }
                     $skip{$other_name}++;
                 }
@@ -146,8 +162,8 @@ sub validate {
         }
     }
 
+
     if(@missing) {
-        my @real_missing;
         MISSING: foreach my $rule(@missing) {
             my $name = $rule->{name};
             next if exists $skip{$name};
@@ -160,25 +176,35 @@ sub validate {
                     push @xors, $other_name;
                 }
             }
-            push @real_missing, @xors
+            my $real_missing = @xors
                 ? sprintf(q{'%s' (or %s)},
                     $name, Mouse::Util::quoted_english_list(@xors) )
                 : sprintf(q{'%s'}, $name);
-        }
-
-        if(@real_missing) {
-            $self->throw_error(
-                'Missing parameters: '
-                . Mouse::Util::english_list(@real_missing)
-            );
+            push @errors, {
+                type    => 'MissingParameter',
+                message => "Missing parameter: $real_missing",
+                rule    => $rule,
+            };
         }
     }
 
     &Internals::SvREADONLY($args, 1);
 
     if($used < $nargs) {
-        return $self->found_unknown_parameters($rules, $args);
+        my %unknowns = $self->unknown_parameters($rules, $args);
+        foreach my $name( sort keys %unknowns ) {
+            push @errors, {
+                type    => 'UnknownParameter',
+                message => "Unknown parameter: '$name'",
+                value   => $unknowns{$name},
+            };
+        }
     }
+
+    if(@errors) {
+        $self->found_errors($args, @errors);
+    }
+
     return $args;
 }
 
@@ -194,11 +220,13 @@ sub unknown_parameters {
     } keys %{$args};
 }
 
-sub found_unknown_parameters {
-    my($self, $rules, $args) = @_;
-    my %unknowns = $self->unknown_parameters($rules, $args);
-    $self->throw_error("Unknown parameters: "
-        . Mouse::Util::quoted_english_list(keys %unknowns) );
+sub found_errors {
+    my($self, $args, @errors) = @_;
+    my $msg = '';
+    foreach my $e(@errors) {
+        $msg .= $e->{message} . "\n";
+    }
+    $self->throw_error($msg . '... found');
 }
 
 sub throw_error {
@@ -210,18 +238,18 @@ sub throw_error {
 sub apply_type_constraint {
     my($self, $rule, $value_ref) = @_;
     my $tc = $rule->{type};
-    return if $tc->check(${$value_ref});
+    return '' if $tc->check(${$value_ref});
 
     if($rule->{should_coercion}) {
         my $value = $tc->coerce(${$value_ref});
         if($tc->check($value)) {
             ${$value_ref} = $value;
-            return;
+            return '';
         }
     }
-    $self->throw_error(
-        "Illegal value for '$rule->{name}' because: "
-        . $tc->get_message(${$value_ref}) );
+
+    return "Illegal value for '$rule->{name}' because: "
+        . $tc->get_message(${$value_ref});
 }
 
 __PACKAGE__->meta->make_immutable;

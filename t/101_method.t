@@ -22,7 +22,7 @@ note 'failing cases';
 eval {
     $v->validate('MyClass');
 };
-like $@, qr/Missing parameters: 'foo' at/, 'missing parameters';
+like $@, qr/Missing parameter: 'foo'/, 'missing parameters';
 
 eval {
     $v->validate('MyClass', {foo => 'bar'});

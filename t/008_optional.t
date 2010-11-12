@@ -22,21 +22,25 @@ note 'failing cases';
 eval {
     $v->validate();
 };
-like $@, qr/Missing parameters: 'bar' and 'foo' at/, 'missing parameters';
+like $@, qr/Missing parameter: 'foo'/, 'missing parameters';
+like $@, qr/Missing parameter: 'bar'/, 'missing parameters';
 
 eval {
     $v->validate(baz => 1);
 };
-like $@, qr/Missing parameters: 'bar' and 'foo' at/, 'missing parameters';
+like $@, qr/Missing parameter: 'foo'/, 'missing parameters';
+like $@, qr/Missing parameter: 'bar'/, 'missing parameters';
 
 eval {
     $v->validate(foo => 1);
 };
-like $@, qr/Missing parameters: 'bar' at/, 'missing parameters';
+like $@, qr/Missing parameter: 'bar'/, 'missing parameters';
+unlike $@, qr/Missing parameter: 'foo'/, 'missing parameters';
 
 eval {
     $v->validate(bar => 1);
 };
-like $@, qr/Missing parameters: 'foo' at/, 'missing parameters';
+like $@, qr/Missing parameter: 'foo'/, 'missing parameters';
+unlike $@, qr/Missing parameter: 'bar'/, 'missing parameters';
 
 done_testing;
