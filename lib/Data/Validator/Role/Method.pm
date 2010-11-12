@@ -5,8 +5,7 @@ sub parse_whole_args { 0 }
 
 around validate => sub {
     my($next, $self, @args) = @_;
-    my $invocant = shift @args;
-    return( $invocant, $self->$next(@args) );
+    return( shift(@args), $self->$next(@args) );
 };
 
 no Mouse::Role;
