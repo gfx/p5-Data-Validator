@@ -38,8 +38,7 @@ sub BUILDARGS {
             exists($rule->{$attr}) and $used++;
         }
         if($used < keys %{$rule}) {
-            my @unknowns = grep { not exists $rule_attrs{$_} }
-                keys %{$rule};
+            my @unknowns = grep { not exists $rule_attrs{$_} }  keys %{$rule};
             Carp::croak("Unknown attributes in a validation rule for '$name': "
                 . Mouse::Util::quoted_english_list(@unknowns) );
         }
@@ -116,7 +115,7 @@ sub validate {
         next if exists $skip{$name};
 
         if(exists $args->{$name}) {
-            $self->_apply_type_constraint($rule, \$args->{$name})
+            $self->apply_type_constraint($rule, \$args->{$name})
                 if exists $rule->{type};
 
             if($rule->{xor}) {
@@ -206,7 +205,7 @@ sub throw_error {
     Carp::croak($message);
 }
 
-sub _apply_type_constraint {
+sub apply_type_constraint {
     my($self, $rule, $value_ref) = @_;
     my $tc = $rule->{type};
     return if $tc->check(${$value_ref});
@@ -222,11 +221,6 @@ sub _apply_type_constraint {
         "Illegal value for '$rule->{name}' because: "
         . $tc->get_message(${$value_ref}) );
 }
-
-sub _unknown {
-    my($self, $knowns, $params) = @_;
-}
-
 
 __PACKAGE__->meta->make_immutable;
 __END__
