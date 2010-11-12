@@ -6,38 +6,49 @@ use Data::Validator;
 
 my $v = Data::Validator->new(
     foo => 'Num',
+    bar => 'Num',
 )->with('Sequenced');
 isa_ok $v, 'Data::Validator';
 
-my $args = $v->validate({ foo => 42 });
-is_deeply $args, { foo => 42 };
+my $args = $v->validate({ foo => 42, bar => 1 });
+is_deeply $args, { foo => 42, bar => 1 };
 
-$args = $v->validate({ foo => 3.14 });
-is_deeply $args, { foo => 3.14 };
+$args = $v->validate(3.14, 2.0);
+is_deeply $args, { foo => 3.14, bar => 2.0 };
 
-$args = $v->validate(3.14);
-is_deeply $args, { foo => 3.14 };
+$args = $v->validate(3.14, { bar => 10 });
+is_deeply $args, { foo => 3.14, bar => 10 };
 
 note 'failing cases';
 
 eval {
     $v->validate({});
 };
-like $@, qr/Missing parameters: 'foo' at/, 'missing parameters';
+like $@, qr/Missing parameters: 'bar' and 'foo' at/, 'missing parameters';
 
 eval {
     $v->validate();
 };
-like $@, qr/Missing parameters: 'foo' at/, 'missing parameters';
+like $@, qr/Missing parameters: 'bar' and 'foo' at/, 'missing parameters';
 
 eval {
-    $v->validate({foo => 'bar'});
+    $v->validate({foo => 'bar', bar => 1});
 };
 like $@, qr/Validation failed for 'Num' with value bar/, 'validation falure';
 
 eval {
-    $v->validate('bar');
+    $v->validate('bar', 1);
 };
 like $@, qr/Validation failed for 'Num' with value bar/, 'validation falure';
+
+eval {
+    $v->validate(42, 'bar');
+};
+like $@, qr/Validation failed for 'Num' with value bar/, 'validation falure';
+
+eval {
+    $v->validate(1, 2, 3, 4);
+};
+like $@, qr/Unknown parameters/;
 
 done_testing;

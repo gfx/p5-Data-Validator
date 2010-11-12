@@ -5,14 +5,18 @@ use Mouse::Util::TypeConstraints ();
 sub parse_whole_args { 1 }
 
 around initialize => sub {
-    my($next, $self, @args) = @_;
-    if(@args == 1 && Mouse::Util::TypeConstraints::HashRef($args[0])) {
-        return { %{ $args[0] } }; # must be copied
-    }
-    my $rules = $self->rules;
+    shift; # original method; not used
+    my $self = shift;
     my %args;
-    foreach my $i( 0 .. (@args - 1) ) {
-        $args{ $rules->[$i]->{name} } = $args[$i];
+
+    if( @_ and Mouse::Util::TypeConstraints::HashRef($_[-1]) ) {
+        %args = %{ pop @_ };
+    }
+
+    my $rules = $self->rules;
+    foreach my $i( 0 .. (@_ - 1) ) {
+        my $rule = $rules->[$i] || +{ name => "[$i]" };
+        $args{ $rule->{name} } = $_[$i];
     }
     return \%args;
 };

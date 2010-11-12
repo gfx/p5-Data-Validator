@@ -212,10 +212,15 @@ sub _apply_type_constraint {
     return if $tc->check(${$value_ref});
 
     if($rule->{should_coercion}) {
-        ${$value_ref} = $tc->coerce(${$value_ref});
-        return if $tc->check(${$value_ref});
+        my $value = $tc->coerce(${$value_ref});
+        if($tc->check($value)) {
+            ${$value_ref} = $value;
+            return;
+        }
     }
-    $self->throw_error( $tc->get_message(${$value_ref}) );
+    $self->throw_error(
+        "Illegal value for '$rule->{name}' because: "
+        . $tc->get_message(${$value_ref}) );
 }
 
 sub _unknown {
@@ -324,6 +329,9 @@ and returns it as the first value:
 
 Deals with arguments in sequenced style, where users should pass
 arguments by the order of argument rules, instead of by-name.
+
+Note that if the last argument is a HASH reference, it is regarded as
+named-style arguments.
 
 =head3 AllowExtra
 

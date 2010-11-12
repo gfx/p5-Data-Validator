@@ -103,6 +103,8 @@ validator
 validators
 invocants
 extentions
+AllowExtra
+behaviours
 
 versa # vice versa
 ish   # something-ish
