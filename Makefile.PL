@@ -6,7 +6,7 @@ use Module::Install::Repository;
 
 all_from 'lib/Data/Validator.pm';
 
-requires 'Mouse' => 0.70;
+requires 'Mouse' => 0.86;
 
 test_requires 'Test::Requires';
 test_requires 'Test::More' => '0.88';
