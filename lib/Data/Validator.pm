@@ -302,11 +302,35 @@ B<< Any API will change without notice >>.
 
 =head1 INTERFACE
 
-=head2 C<< Data::Validator->new(@rules) :Validator >>
+=head2 C<< Data::Validator->new( $arg_name => $rule [, ...]) :Validator >>
+
+Creates a validation rule.
+
+Attributes for I<$rule> are as follows:
+
+=over
+
+=item C<< isa => $type : Str|Object >>
+
+=item C<< does => $role : Str|Object >>
+
+=item C<< optional => $value : Bool >>
+
+=item C<< xor => $exclusives : ArrayRef >>
+
+=item C<< documentation => $doc : Str >>
+
+=back
 
 =head2 C<< $validator->with(@roles) :Validator >>
 
+Applies I<@roles> to I<$validator> and returns itself.
+
+See L</EXTENTIONS> for details.
+
 =head2 C<< $validator->validate(@args) :HashRef >>
+
+Validates I<@args> and returns a HASH reference.
 
 =head1 EXTENTIONS
 
