@@ -1,5 +1,6 @@
 .shipit
 benchmark/method.pl
+benchmark/sequenced.pl
 benchmark/simple.pl
 benchmark/with-type.pl
 Changes
@@ -28,6 +29,7 @@ t/004_xor.t
 t/005_coerce.t
 t/006_moose_coerce.t
 t/007_immutable.t
+t/008_optional.t
 t/100_with.t
 t/101_method.t
 t/102_sequenced.t

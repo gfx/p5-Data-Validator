@@ -308,9 +308,9 @@ B<< Any API will change without notice >>.
 
 =head2 C<< Data::Validator->new(@rules) :Validator >>
 
-=head2 C<< $validator->validate(@args) :HashRef >>
-
 =head2 C<< $validator->with(@roles) :Validator >>
+
+=head2 C<< $validator->validate(@args) :HashRef >>
 
 =head1 EXTENTIONS
 
@@ -362,11 +362,11 @@ L<Mouse>
 
 =head1 AUTHOR
 
-gfx E<lt>gfuji@cpan.orgE<gt>
+Fuji, Goro (gfx) E<lt>gfuji@cpan.orgE<gt>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (c) 2010, gfx. All rights reserved.
+Copyright (c) 2010, Fuji Goro (gfx). All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
