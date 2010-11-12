@@ -6,7 +6,6 @@ use Module::Install::Repository;
 
 all_from 'lib/Data/Validator.pm';
 
-
 requires 'Mouse' => 0.70;
 
 test_requires 'Test::Requires';
@@ -16,7 +15,6 @@ auto_set_repository;
 
 tests_recursive;
 author_tests 'xt';
-
 
 clean_files qw(
     Data-Validator-*

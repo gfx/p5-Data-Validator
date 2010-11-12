@@ -298,7 +298,44 @@ This document describes Data::Validator version 0.01.
 This is yet another validation library, based on C<Smart::Args> but
 less smart.
 
-B<< Any API will change without notice >>.
+This is under development. B<< Any API will change without notice >>.
+
+=head2 Concepts
+
+=over
+
+=item Natural as Perl code
+
+I love C<Smart::Args> because it is really stylish, but it does not seem
+Perl-ish.
+
+Thus, I have designed C<Data::Validator> in more Perl-ish way
+with full of C<Smart::Args> functionality.
+
+=item Basics on Mouse's type constraint system
+
+Moose's type constraint system is awesome, and so is Mouse's. In fact,
+Mouse's type constraints are much faster than Moose's so that you need not
+hesitate to use type validations.
+
+Thus, I have made C<Data::Validator> based on Mouse's type constraint system.
+
+=item Pure Perl
+
+Although I do not hesitate to depend on XS modules, some people think that
+XS modules are hard to install.
+
+Thus, I have written C<Data::Validator> in pure Perl and chosen required modules
+which work in pure Perl.
+
+=item Performance
+
+I think validators should be as fast as possible because they are only
+important for illegal inputs.
+
+This is much faster than C<Params::Validate>, which has an XS backend, though.
+
+=back
 
 =head1 INTERFACE
 
@@ -330,7 +367,10 @@ See L</EXTENTIONS> for details.
 
 =head2 C<< $validator->validate(@args) :HashRef >>
 
-Validates I<@args> and returns a HASH reference.
+Validates I<@args> and returns a restricted HASH reference.
+
+Restricted hashes are hashes which do not allow to access non-existing keys,
+so you must check a key C<exists> in the hash before fetching values.
 
 =head1 EXTENTIONS
 
