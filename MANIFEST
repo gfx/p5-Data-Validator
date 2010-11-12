@@ -2,8 +2,10 @@
 benchmark/method.pl
 benchmark/sequenced.pl
 benchmark/simple.pl
+benchmark/vs-moosex-params-validate.pl
 benchmark/with-type.pl
 Changes
+example/mx-type.pl
 example/simple.pl
 inc/Module/Install.pm
 inc/Module/Install/AuthorTests.pm
@@ -14,6 +16,7 @@ inc/Module/Install/Repository.pm
 inc/Module/Install/WriteAll.pm
 lib/Data/Validator.pm
 lib/Data/Validator/Role/AllowExtra.pm
+lib/Data/Validator/Role/Confess.pm
 lib/Data/Validator/Role/Method.pm
 lib/Data/Validator/Role/Sequenced.pm
 Makefile.PL
@@ -36,6 +39,7 @@ t/101_method.t
 t/102_sequenced.t
 t/103_method_sequenced.t
 t/104_extra_args.t
+t/105_confess.t
 xt/perlcritic.t
 xt/pod.t
 xt/podspell.t
