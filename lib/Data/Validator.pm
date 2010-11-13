@@ -50,9 +50,10 @@ sub BUILDARGS {
 
         # setup the rule
         if(defined $rule->{xor}) {
-            $xor{$name} = Mouse::Util::TypeConstraints::ArrayRef($rule->{xor})
-                    ?  $rule->{xor}
-                    : [$rule->{xor}];
+            my @xors = Mouse::Util::TypeConstraints::ArrayRef($rule->{xor})
+                    ? @{$rule->{xor}}
+                    :  ($rule->{xor});
+            $xor{$name} = $rule->{xor} = \@xors;
         }
 
         if(defined $rule->{isa}) {

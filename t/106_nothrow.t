@@ -57,4 +57,20 @@ $e = $errors->[1];
 is $e->{type}, 'UnknownParameter', 'UnknownParameter';
 is $e->{name}, 'baz';
 
+$v = Data::Validator->new(
+    foo => { xor => 'bar' },
+    bar => { default => 42 },
+)->with('NoThrow');
+$args = $v->validate();
+ok !$v->has_errors();
+is_deeply $args, { bar => 42 };
+$v->clear_errors();
+$args  = $v->validate( foo => 10, bar => 20 );
+is_deeply $args, { foo => 10, bar => 20 };
+ok $v->has_errors();
+$e = $v->errors->[0];
+is $e->{type}, 'ExclusiveParameter', 'ExclusiveParameter';
+is $e->{name}, 'foo';
+like $e->{message}, qr/Exclusive parameters passed together: 'foo' v.s. 'bar'/;
+
 done_testing;
