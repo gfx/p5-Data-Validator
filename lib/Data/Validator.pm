@@ -102,6 +102,14 @@ sub with {
     return $self;
 }
 
+sub find_rule {
+    my($self, $name) = @_;
+    foreach my $rule(@{$self->rules}) {
+        return $rule if $rule->{name} eq $name;
+    }
+    return undef;
+}
+
 sub validate {
     my $self = shift;
     my $args = $self->initialize(@_);
@@ -122,12 +130,11 @@ sub validate {
             if(exists $rule->{type}) {
                 my $err = $self->apply_type_constraint($rule, \$args->{$name});
                 if($err) {
-                    push @errors, {
+                    push @errors, $self->make_error(
                         type    => 'InvalidValue',
                         message => $err,
-                        rule    => $rule,
-                        value   => $args->{$name},
-                    };
+                        name    => $name,
+                    );
                     next RULE;
                 }
             }
@@ -138,12 +145,12 @@ sub validate {
                     if(exists $args->{$other_name}) {
                         my $exclusive = Mouse::Util::quoted_english_list(
                             grep { exists $args->{$_} } @{$rule->{xor}} );
-                        push @errors, {
+                        push @errors, $self->make_error(
                             type    => 'ExclusiveParameter',
                             message => "Exclusive parameters passed together:"
                                      . " '$name' v.s. $exclusive",
-                            rule    => $rule,
-                        };
+                            name    => $name,
+                        );
                         next RULE;
                     }
                     $skip{$other_name}++;
@@ -180,11 +187,11 @@ sub validate {
                 ? sprintf(q{'%s' (or %s)},
                     $name, Mouse::Util::quoted_english_list(@xors) )
                 : sprintf(q{'%s'}, $name);
-            push @errors, {
+            push @errors, $self->make_error(
                 type    => 'MissingParameter',
                 message => "Missing parameter: $real_missing",
-                rule    => $rule,
-            };
+                name    => $name,
+            );
         }
     }
 
@@ -192,17 +199,19 @@ sub validate {
 
     if($used < $nargs) {
         my %unknowns = $self->unknown_parameters($rules, $args);
-        foreach my $name( sort keys %unknowns ) {
-            push @errors, {
-                type    => 'UnknownParameter',
-                message => "Unknown parameter: '$name'",
-                value   => $unknowns{$name},
-            };
+        if(keys %unknowns) {
+            foreach my $name( sort keys %unknowns ) {
+                push @errors, $self->make_error(
+                    type    => 'UnknownParameter',
+                    message => "Unknown parameter: '$name'",
+                    name    => $name,
+                );
+            }
         }
     }
 
     if(@errors) {
-        $self->found_errors($args, @errors);
+        $args = $self->found_errors($args, @errors);
     }
 
     return $args;
@@ -227,6 +236,11 @@ sub found_errors {
         $msg .= $e->{message} . "\n";
     }
     $self->throw_error($msg . '... found');
+}
+
+sub make_error {
+    my($self, %e) = @_;
+    return \%e;
 }
 
 sub throw_error {
