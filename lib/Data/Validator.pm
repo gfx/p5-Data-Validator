@@ -213,6 +213,7 @@ sub validate {
         }
     }
 
+    # make it ristricted
     &Internals::SvREADONLY($args, 1);
 
     if(@errors) {
@@ -407,6 +408,15 @@ Note that you cannot use it with the C<isa> attribute.
 
 If false, the rule does not try to coerce when the validation fails.
 Default to true.
+
+=item C<< default=> $value : Any | CodeRef >>
+
+The default value for the argument.
+If it is a CODE reference, it is called in scalar context and the return value
+is used as a default value.
+
+Unlike Moose/Mouse's C<default>, references are allowd, but note that
+they are statically allocated.
 
 =item C<< optional => $value : Bool >>
 
