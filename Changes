@@ -1,5 +1,8 @@
 Revision history for Perl extension Data::Validator
 
+(next)
+    - Add 'coerce' attribute for rules (default to true)
+
 0.04 2010-11-13 10:12:07
     - Default to confess(), not croak()
     - Add two extentions: Croak and NoThrow
