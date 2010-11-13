@@ -3,8 +3,6 @@ use Mouse::Role;
 use Carp ();
 our @CARP_NOT = qw(Data::Validator);
 
-sub parse_whole_args { 0 }
-
 sub throw_error {
     my($self, $message) = @_;
     local $Carp::CarpLevel = $Carp::CarpLevel + 1;

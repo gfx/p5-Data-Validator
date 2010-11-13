@@ -2,8 +2,6 @@ package Data::Validator::Role::Sequenced;
 use Mouse::Role;
 use Mouse::Util::TypeConstraints ();
 
-sub parse_whole_args { 1 }
-
 around initialize => sub {
     shift; # original method; not used
     my $self = shift;

@@ -1,8 +1,6 @@
 package Data::Validator::Role::AllowExtra;
 use Mouse::Role;
 
-sub parse_whole_args { 0 }
-
 has extra_args => (
     is         => 'rw',
     isa        => 'ArrayRef',

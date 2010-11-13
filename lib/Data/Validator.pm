@@ -96,14 +96,13 @@ sub BUILDARGS {
 sub with {
     my($self, @roles) = @_;
     foreach my $role(@roles) {
+        next if ref $role;
         $role = Mouse::Util::load_first_existing_class(
             __PACKAGE__ . '::Role::' . $role,
             $role,
         );
     }
-    @roles = sort { $b->parse_whole_args <=> $a->parse_whole_args } @roles;
-    Mouse::Util::apply_all_roles($self,
-        map { $_ => { -excludes => 'parse_whole_args' } } @roles);
+    Mouse::Util::apply_all_roles($self, @roles);
     return $self;
 }
 
