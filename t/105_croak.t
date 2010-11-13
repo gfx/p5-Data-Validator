@@ -8,7 +8,7 @@ use Data::Validator;
     sub aaa {
         my $v = Data::Validator->new(
             foo => { },
-        )->with('Confess');
+        )->with('Croak');
         $v->validate(@_);
     }
     sub bbb {
@@ -23,8 +23,8 @@ eval {
 };
 note $@;
 like $@, qr/Missing parameter: 'foo'/;
-like $@, qr/Data::Validator::validate/;
-like $@, qr/A::bbb/;
-like $@, qr/A::aaa/;
+like $@, qr/\Q@{[__FILE__]}/;
+unlike $@, qr/A::bbb/;
+unlike $@, qr/A::aaa/;
 
 done_testing;

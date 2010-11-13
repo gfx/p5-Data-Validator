@@ -245,8 +245,8 @@ sub make_error {
 
 sub throw_error {
     my($self, $message) = @_;
-    local $Carp::CarpLevel = $Carp::CarpLevel = 1;
-    Carp::croak($message);
+    local $Carp::CarpLevel = $Carp::CarpLevel + 2; # &throw_error + &validate
+    confess($message);
 }
 
 sub apply_type_constraint {
@@ -440,15 +440,10 @@ a list of name-value pairs:
 
     my($args, %extra) = $rule->validate(@_);
 
-=head3 Confess
+=head3 Croak
 
-Reports stack backtraces on errors.
-
-If you want to enable this in global, apply it to C<Data::Validator> directly:
-
-    Mouse::Util::apply_all_roles(
-        'Data::Validator' => 'Data::Validator::Role::Confess',
-    );
+Does not report stack backtraces on errors, i.e. uses C<croak()> instead
+of C<confess()>.
 
 =head1 DEPENDENCIES
 

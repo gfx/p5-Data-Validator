@@ -16,8 +16,9 @@ inc/Module/Install/Repository.pm
 inc/Module/Install/WriteAll.pm
 lib/Data/Validator.pm
 lib/Data/Validator/Role/AllowExtra.pm
-lib/Data/Validator/Role/Confess.pm
+lib/Data/Validator/Role/Croak.pm
 lib/Data/Validator/Role/Method.pm
+lib/Data/Validator/Role/NoThrow.pm
 lib/Data/Validator/Role/Sequenced.pm
 Makefile.PL
 MANIFEST			This list of files
@@ -39,7 +40,8 @@ t/101_method.t
 t/102_sequenced.t
 t/103_method_sequenced.t
 t/104_extra_args.t
-t/105_confess.t
+t/105_croak.t
+t/106_nothrow.t
 xt/perlcritic.t
 xt/pod.t
 xt/podspell.t
