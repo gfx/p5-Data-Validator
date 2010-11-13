@@ -66,7 +66,7 @@ sub BUILDARGS {
         }
 
         if(defined $rule->{type} && not defined $rule->{coerce}) {
-            $rule->{coercion} = $rule->{type}->has_coercion;
+            $rule->{coerce} = $rule->{type}->has_coercion;
         }
 
         $rule->{name} = $name;
