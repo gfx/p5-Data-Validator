@@ -8,6 +8,10 @@ my $v = Data::Validator->new(
     foo => 'Num',
 );
 isa_ok $v, 'Data::Validator';
+ok $v->find_rule('foo');
+is $v->find_rule('foo')->{name}, 'foo';
+ok !defined($v->find_rule('bar'));
+
 
 my $args = $v->validate({ foo => 42 });
 is_deeply $args, { foo => 42 };
