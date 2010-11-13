@@ -487,14 +487,14 @@ arguments by the order of argument rules, instead of by-name.
 Note that if the last argument is a HASH reference, it is regarded as
 named-style arguments.
 
-=head3 AllowExtra
+=head2 AllowExtra
 
 Regards unknown arguments as extra arguments, and returns them as
 a list of name-value pairs:
 
     my($args, %extra) = $rule->validate(@_);
 
-=head3 NoThrow
+=head2 NoThrow
 
 Does not throw errors. Instead, it provides validators with the C<errors>
 attribute:
@@ -508,7 +508,7 @@ attribute:
         }
     }
 
-=head3 Croak
+=head2 Croak
 
 Does not report stack backtraces on errors, i.e. uses C<croak()> instead
 of C<confess()>.
