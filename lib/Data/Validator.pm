@@ -375,7 +375,7 @@ modules which work in pure Perl.
 =item Performance
 
 Validators should be as fast as possible because they matter only for illegal
-inputs. Otherwise, one want something like I<no validation> option.
+inputs. Otherwise, one would want something like I<no validation> option.
 
 This is much faster than C<Params::Validate>, which has an XS backend, though.
 
