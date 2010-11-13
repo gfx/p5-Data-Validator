@@ -32,7 +32,7 @@ __END__
 
 =head1 NAME
 
-Data::Validator::NoThrow - Does not throw errors
+Data::Validator::Role::NoThrow - Does not throw errors
 
 =cut
 
