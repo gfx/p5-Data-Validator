@@ -396,11 +396,14 @@ Attributes for I<$rule> are as follows:
 
 =item C<< isa => $type : Str|Object >>
 
-The type of the rule. If I<$type> is undefined, it is regarded as a class name.
+The type of the rule, which can be a Mouse type constraint name, a class name,
+or a type constraint object of either Mouse or Moose (i.e. it's duck-typed).
 
 =item C<< does => $role : Str|Object >>
 
-The type of the rule. If I<$type> is undefined, it is regarded as a role name.
+The type of the rule, which can be a Mouse type constraint name, a role name,
+or a type constraint object of either Mouse or Moose (i.e. it's duck-typed).
+
 Note that you cannot use it with the C<isa> attribute.
 
 =item C<< coerce => $should_coercion : Bool >>
