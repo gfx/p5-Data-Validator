@@ -118,13 +118,12 @@ sub validate {
     my $self = shift;
     my $args = $self->initialize(@_);
 
-    my $rules = $self->rules;
     my %skip;
-
     my @errors;
     my @missing;
     my $nargs = scalar keys %{$args};
     my $used  = 0;
+    my $rules = $self->rules;
     RULE: foreach my $rule(@{ $rules }) {
         my $name = $rule->{name};
         next RULE if exists $skip{$name};
@@ -165,7 +164,7 @@ sub validate {
         elsif(exists $rule->{default}) {
             my $default = $rule->{default};
             $args->{$name} = Mouse::Util::TypeConstraints::CodeRef($default)
-                ? $default->()
+                ? $default->($self, $rule, $args)
                 : $default;
         }
         elsif(!$rule->{optional}) {
@@ -412,10 +411,24 @@ Default to true.
 =item C<< default=> $value : Any | CodeRef >>
 
 The default value for the argument.
-If it is a CODE reference, it is called in scalar context and the return value
+If it is a CODE reference, it is called in scalar context as
+C<< $default->($validator, $rule, $args) >> and its return value
 is used as a default value.
 
-Unlike Moose/Mouse's C<default>, references are allowd, but note that
+Because arguments are validated in the order of definitions, C<default>
+callbacks can rely on the previously-filled values:
+
+    my $v = Data::Validator->new(
+        foo => { default => 99 },
+        bar => { default => sub {
+            my($validator, $this_rule, $args) = @_;
+            return $args->{foo} + 1;
+        } },
+    );
+    $v->validate();          # bar is 100
+    $v->validate(foo => 42); # bar is 43
+
+Unlike Moose/Mouse's C<default>, any references are allowed, but note that
 they are statically allocated.
 
 =item C<< optional => $value : Bool >>
