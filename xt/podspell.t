@@ -108,6 +108,7 @@ extentions
 AllowExtra
 behaviours
 backend
+NoThrow
 
 versa # vice versa
 ish   # something-ish

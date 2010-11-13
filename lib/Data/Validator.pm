@@ -18,8 +18,12 @@ has rules => (
 
 no Mouse;
 
-my %rule_attrs = map { $_ => undef }
-    qw(isa does default optional xor documentation);
+my %rule_attrs = map { $_ => undef }qw(
+    isa does coerce
+    default optional
+    xor
+    documentation
+);
 
 sub BUILDARGS {
     my($class, @mapping) = @_;
@@ -61,8 +65,8 @@ sub BUILDARGS {
             $rule->{type} = _does_tc(delete $rule->{does});
         }
 
-        if(defined $rule->{type}) {
-            $rule->{should_coercion} = $rule->{type}->has_coercion;
+        if(defined $rule->{type} && not defined $rule->{coerce}) {
+            $rule->{coercion} = $rule->{type}->has_coercion;
         }
 
         $rule->{name} = $name;
@@ -255,10 +259,10 @@ sub apply_type_constraint {
     my $tc = $rule->{type};
     return '' if $tc->check(${$value_ref});
 
-    if($rule->{should_coercion}) {
+    if($rule->{coerce}) {
         my $value = $tc->coerce(${$value_ref});
         if($tc->check($value)) {
-            ${$value_ref} = $value;
+            ${$value_ref} = $value; # commit
             return '';
         }
     }
@@ -392,13 +396,31 @@ Attributes for I<$rule> are as follows:
 
 =item C<< isa => $type : Str|Object >>
 
+The type of the rule. If I<$type> is undefined, it is regarded as a class name.
+
 =item C<< does => $role : Str|Object >>
+
+The type of the rule. If I<$type> is undefined, it is regarded as a role name.
+Note that you cannot use it with the C<isa> attribute.
+
+=item C<< coerce => $should_coercion : Bool >>
+
+If false, the rule does not try to coerce when the validation fails.
+Default to true.
 
 =item C<< optional => $value : Bool >>
 
+If true, users can omit the argument. Default to false.
+
 =item C<< xor => $exclusives : ArrayRef >>
 
+Exclusive arguments, which users cannot pass together.
+
 =item C<< documentation => $doc : Str >>
+
+Descriptions of the argument.
+
+This is not yet used anywhere.
 
 =back
 
