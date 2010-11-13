@@ -175,7 +175,6 @@ sub validate {
         MISSING: foreach my $rule(@missing) {
             my $name = $rule->{name};
             next if exists $skip{$name};
-            next if exists $args->{$name};
 
             my @xors;
             if($rule->{xor}) {
