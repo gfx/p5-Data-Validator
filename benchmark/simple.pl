@@ -35,6 +35,10 @@ cmpthese -1, {
     'P::Validate' => sub {
         my $x = pv_add({ x => 10, y => 10 });
     },
+    'P::Validate/off' => sub {
+        local $Params::Validate::NO_VALIDATION = 1;
+        my $x = pv_add({ x => 10, y => 10 });
+    },
     'S::Args' => sub {
         my $x = sa_add({ x => 10, y => 10 });
     },

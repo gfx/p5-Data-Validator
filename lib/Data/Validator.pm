@@ -360,9 +360,9 @@ with full of C<Smart::Args> functionality.
 
 Moose's type constraint system is awesome, and so is Mouse's. In fact,
 Mouse's type constraints are much faster than Moose's so that you need not
-hesitate to use type validations.
+hesitate to check types.
 
-Thus, I have made C<Data::Validator> based on Mouse's type constraint system.
+Thus, I have made C<Data::Validator> on Mouse's type constraint system.
 
 =item Pure Perl
 
@@ -375,7 +375,7 @@ modules which work in pure Perl.
 =item Performance
 
 Validators should be as fast as possible because they matter only for illegal
-inputs.
+inputs. Otherwise, one want something like I<no validation> option.
 
 This is much faster than C<Params::Validate>, which has an XS backend, though.
 
