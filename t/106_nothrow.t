@@ -48,13 +48,13 @@ $v->clear_errors();
 $args = $v->validate(foo => 'bar', baz => 10);
 is_deeply $args, { foo => 'bar', baz => 10 };
 ok $v->has_errors();
-is scalar(@{$v->errors}), 2;
-$e = $v->errors->[0];
+my $errors = $v->clear_errors();
+is scalar(@$errors), 2;
+$e = $errors->[0];
 is $e->{type}, 'InvalidValue', 'InvalidValue';
 is $e->{name}, 'foo';
-$e = $v->errors->[1];
+$e = $errors->[1];
 is $e->{type}, 'UnknownParameter', 'UnknownParameter';
 is $e->{name}, 'baz';
-$v->clear_errors();
 
 done_testing;

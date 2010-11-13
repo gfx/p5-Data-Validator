@@ -195,7 +195,6 @@ sub validate {
         }
     }
 
-    &Internals::SvREADONLY($args, 1);
 
     if($used < $nargs) {
         my %unknowns = $self->unknown_parameters($rules, $args);
@@ -209,6 +208,8 @@ sub validate {
             }
         }
     }
+
+    &Internals::SvREADONLY($args, 1);
 
     if(@errors) {
         $args = $self->found_errors($args, @errors);
@@ -324,7 +325,7 @@ This document describes Data::Validator version 0.03.
     seq({ foo => 'bar' }); # named style are available!
 
 
-    # both Method and Sequenced
+    # using Method and Sequenced together
     sub seq_method {
         state $rule = Data::Validator->new(
             foo => 'Str',
@@ -372,8 +373,8 @@ modules which work in pure Perl.
 
 =item Performance
 
-I think validators should be as fast as possible because they matter only
-or illegal inputs.
+Validators should be as fast as possible because they matter only for illegal
+inputs.
 
 This is much faster than C<Params::Validate>, which has an XS backend, though.
 
@@ -383,7 +384,7 @@ This is much faster than C<Params::Validate>, which has an XS backend, though.
 
 =head2 C<< Data::Validator->new( $arg_name => $rule [, ...]) :Validator >>
 
-Creates a validation rule.
+Creates a validation rule. You should cache the rules for performance.
 
 Attributes for I<$rule> are as follows:
 
@@ -400,6 +401,10 @@ Attributes for I<$rule> are as follows:
 =item C<< documentation => $doc : Str >>
 
 =back
+
+=head2 C<< $validator->find_rule($name :Str) >>
+
+Finds the rule named I<$name>. Provided for error handling.
 
 =head2 C<< $validator->with(@extentions) :Validator >>
 
@@ -440,6 +445,20 @@ a list of name-value pairs:
 
     my($args, %extra) = $rule->validate(@_);
 
+=head3 NoThrow
+
+Does not throw errors. Instead, it provides validators with the C<errors>
+attribute:
+
+    my $args = $v->validate(@_); # it never throws errors
+    if($v->has_errors) {
+        my $errors = $v->clear_errors;
+        foreach my $e(@{$errors}) {
+            # $e has 'type', 'message' and 'name'
+            print $e->{message}, "\n";
+        }
+    }
+
 =head3 Croak
 
 Does not report stack backtraces on errors, i.e. uses C<croak()> instead
@@ -457,11 +476,11 @@ to cpan-RT.
 
 =head1 SEE ALSO
 
-L<Params::Validate>
-
 L<Smart::Args>
 
-L<Sub::Args>
+L<Params::Validate>
+
+L<MooseX::Params::Validate>
 
 L<Mouse>
 
