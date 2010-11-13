@@ -146,15 +146,13 @@ sub validate {
                 # checks conflicts with exclusive arguments
                 foreach my $other_name( @{ $rule->{xor} } ) {
                     if(exists $args->{$other_name}) {
-                        my $exclusive = Mouse::Util::quoted_english_list(
-                            grep { exists $args->{$_} } @{$rule->{xor}} );
                         push @errors, $self->make_error(
                             type    => 'ExclusiveParameter',
                             message => "Exclusive parameters passed together:"
-                                     . " '$name' v.s. $exclusive",
+                                     . " '$name' v.s. '$other_name'",
                             name    => $name,
+                            conflict=> $other_name,
                         );
-                        next RULE;
                     }
                     $skip{$other_name}++;
                 }

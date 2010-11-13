@@ -65,8 +65,8 @@ like $@, qr/Exclusive parameters passed together: 'uri' v.s. 'schema'/;
 eval {
     $v->validate(uri => 'foo', schema => 'http', host => 'example.com');
 };
-like $@, qr/Exclusive parameters passed together: 'host' v.s. 'uri'/;
-like $@, qr/Exclusive parameters passed together: 'schema' v.s. 'uri'/;
+like $@, qr/Exclusive parameters passed together: 'uri' v.s. 'host'/;
+like $@, qr/Exclusive parameters passed together: 'uri' v.s. 'schema'/;
 
 note 'case without defaults';
 $v = Data::Validator->new(
