@@ -131,7 +131,7 @@ sub validate {
         if(exists $args->{$name}) {
 
             if(exists $rule->{type}) {
-                my $err = $self->apply_type_constraint($rule, \$args->{$name});
+                my $err = $self->apply_type_constraint($rule, $args, $name);
                 if($err) {
                     push @errors, $self->make_error(
                         type    => 'InvalidValue',
@@ -252,20 +252,20 @@ sub throw_error {
 }
 
 sub apply_type_constraint {
-    my($self, $rule, $value_ref) = @_;
+    my($self, $rule, $args, $name) = @_;
     my $tc = $rule->{type};
-    return '' if $tc->check(${$value_ref});
+    return '' if $tc->check($args->{$name});
 
     if($rule->{coerce}) {
-        my $value = $tc->coerce(${$value_ref});
+        my $value = $tc->coerce($args->{$name});
         if($tc->check($value)) {
-            ${$value_ref} = $value; # commit
+            $args->{$name} = $value; # commit
             return '';
         }
     }
 
     return "Invalid value for '$rule->{name}': "
-        . $tc->get_message(${$value_ref});
+        . $tc->get_message($args->{$name});
 }
 
 __PACKAGE__->meta->make_immutable;
