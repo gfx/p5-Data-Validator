@@ -507,7 +507,7 @@ attribute:
 =head2 Croak
 
 Does not report stack backtraces on errors, i.e. uses C<croak()> instead
-of C<confess()>.
+of C<confess()> to throw errors.
 
 =head1 DEPENDENCIES
 
