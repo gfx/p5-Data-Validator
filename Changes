@@ -1,5 +1,8 @@
 Revision history for Perl extension Data::Validator
 
+0.06 2010-11-16 15:57:33
+    - Just cleaning up
+
 0.05 2010-11-13 17:49:23
     - Add 'coerce' attribute for rules (default to true)
     - Documentation improvements
