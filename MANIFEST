@@ -5,6 +5,7 @@ benchmark/simple.pl
 benchmark/vs-moosex-params-validate.pl
 benchmark/with-type.pl
 Changes
+example/errors.pl
 example/mx-type.pl
 example/simple.pl
 inc/Module/Install.pm

@@ -3,6 +3,7 @@ Data-Validator-*
 !.gitignore
 !.shipit
 !.dim.pl
+*~
 *.o
 *.obj
 *.bs
