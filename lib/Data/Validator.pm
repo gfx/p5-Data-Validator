@@ -342,7 +342,7 @@ This document describes Data::Validator version 0.06.
 This is yet another validation library, based on C<Smart::Args> but
 less smart.
 
-This is under development. B<< Any API will change without notice >>.
+This is designed for general data validation. For example, it is useful for CSV, JSON, XML, and so on.
 
 =head2 Concepts
 
@@ -524,6 +524,8 @@ to cpan-RT.
 L<Smart::Args>
 
 L<Params::Validate>
+
+L<Sub::Args>
 
 L<MooseX::Params::Validate>
 
