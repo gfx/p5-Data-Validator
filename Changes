@@ -1,5 +1,9 @@
 Revision history for Perl extension Data::Validator
 
+0.08 2011-06-19 21:19:51
+    - No code changes
+    - Fix tests for latest Moose
+
 0.07 2011-06-03 00:38:00
     - No code changes
     - Now API is considered stable

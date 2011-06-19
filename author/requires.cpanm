@@ -15,3 +15,8 @@ Test::Synopsis
 ShipIt
 ShipIt::Step::ChangeAllVersions
 CPAN::Uploader
+
+# Moose stuff
+Moose
+Devel::PartialDump
+

@@ -25,6 +25,6 @@ note 'failing cases';
 eval {
     $v->validate({foo => 'bar'});
 };
-like $@, qr/Validation failed for 'MyHash' with value bar/, 'validation falure';
+like $@, qr/Validation failed for 'MyHash'/, 'validation falure';
 
 done_testing;
