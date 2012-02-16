@@ -5,7 +5,7 @@ use Mouse::Util::TypeConstraints ();
 use Mouse::Util                  ();
 use Carp                         ();
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 *_isa_tc  = \&Mouse::Util::TypeConstraints::find_or_create_isa_type_constraint;
 *_does_tc = \&Mouse::Util::TypeConstraints::find_or_create_does_type_constraint;
@@ -277,7 +277,7 @@ Data::Validator - Rule based validator on type constraint system
 
 =head1 VERSION
 
-This document describes Data::Validator version 0.08.
+This document describes Data::Validator version 0.09.
 
 =head1 SYNOPSIS
 
@@ -317,7 +317,7 @@ This document describes Data::Validator version 0.08.
     sub seq {
         state $rule = Data::Validator->new(
             foo => 'Str',
-        )->with('Sequenced');
+        )->with('StrictSequenced');
 
         my $args = $rule->validate(@_);
         # ...
@@ -326,11 +326,11 @@ This document describes Data::Validator version 0.08.
     seq({ foo => 'bar' }); # named style are available!
 
 
-    # using Method and Sequenced together
+    # using Method and StrictSequenced together
     sub seq_method {
         state $rule = Data::Validator->new(
             foo => 'Str',
-        )->with( 'Method', 'Sequenced');
+        )->with( 'Method', 'StrictSequenced');
 
         my($self, $args) = $rule->validate(@_);
         # ...
@@ -474,6 +474,11 @@ Takes the first argument as an invocant (i.e. class or object instance),
 and returns it as the first value:
 
     my($invocant, $args) = $rule->validate(@_);
+
+=head2 StrictSequenced
+
+Deals with arguments in sequenced style, where users should pass
+arguments by the order of argument rules, instead of by-name.
 
 =head2 Sequenced
 

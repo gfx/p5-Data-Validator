@@ -1,5 +1,8 @@
 Revision history for Perl extension Data::Validator
 
+0.09 2012-02-16 16:23:07
+    - Add StrictSequenced role (karupanerura)
+
 0.08 2011-06-19 21:19:51
     - No code changes
     - Fix tests for latest Moose
