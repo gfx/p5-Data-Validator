@@ -209,7 +209,7 @@ sub validate {
         }
     }
 
-    # make it ristricted
+    # make it restricted
     &Internals::SvREADONLY($args, 1);
 
     if(@errors) {
