@@ -1,5 +1,9 @@
 Revision history for Perl extension Data::Validator
 
+1.00 2012-10-20 20:58:51
+    - Bump version to 1.00.
+    - No feature changes. Just upgrade Module::Install.
+
 0.09 2012-02-16 16:23:07
     - Add StrictSequenced role (karupanerura)
 
