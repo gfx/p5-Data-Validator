@@ -11,21 +11,18 @@ my $v = Data::Validator->new(
 
 isa_ok $v, 'Data::Validator';
 
-my $args = $v->validate({ foo => 42, bar => 1 });
+my $args = $v->validate(42, 1);
 is_deeply $args, { foo => 42, bar => 1 };
 
 $args = $v->validate(3.14, 2.0);
 is_deeply $args, { foo => 3.14, bar => 2.0 };
-
-$args = $v->validate({ foo => 3.14, bar => 10 });
-is_deeply $args, { foo => 3.14, bar => 10 };
 
 note 'failing cases';
 
 eval {
     $v->validate({});
 };
-like $@, qr/Missing parameter: 'foo'/, 'missing parameters';
+like $@, qr/Invalid value for 'foo': Validation failed for 'Num' with value/, 'missing parameters';
 like $@, qr/Missing parameter: 'bar'/, 'missing parameters';
 
 eval {
@@ -37,7 +34,8 @@ like $@, qr/Missing parameter: 'bar'/, 'missing parameters';
 eval {
     $v->validate({foo => 'bar', bar => 1});
 };
-like $@, qr/Validation failed for 'Num' with value bar/, 'validation falure';
+like $@, qr/Invalid value for 'foo': Validation failed for 'Num' with value/, 'missing parameters';
+like $@, qr/Missing parameter: 'bar'/, 'missing parameters';
 
 eval {
     $v->validate('bar', 1);

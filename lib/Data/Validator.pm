@@ -323,7 +323,7 @@ This document describes Data::Validator version 1.00.
         # ...
     }
     seq( 'bar' );          # seq() will get { foo => 'bar' }
-    seq({ foo => 'bar' }); # named style are available!
+    seq({ foo => 'bar' }); # named style are NOT available!
 
 
     # using Method and StrictSequenced together
@@ -479,6 +479,10 @@ and returns it as the first value:
 
 Deals with arguments in sequenced style, where users should pass
 arguments by the order of argument rules, instead of by-name.
+
+=head3 INCOMPATIBLE CHANGE
+
+Deals with arguments in named style are NOT available in StrictSequenced.
 
 =head2 Sequenced
 
