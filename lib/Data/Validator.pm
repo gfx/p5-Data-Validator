@@ -480,9 +480,8 @@ and returns it as the first value:
 Deals with arguments in sequenced style, where users should pass
 arguments by the order of argument rules, instead of by-name.
 
-=head3 INCOMPATIBLE CHANGE
-
-Deals with arguments in named style are NOT available in StrictSequenced since version [NEXT].
+Note that single HASH ref argument was dealt as named-style arguments,
+but this feature is NOT available since version 1.01.
 
 =head2 Sequenced
 
