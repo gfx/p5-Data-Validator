@@ -11,8 +11,8 @@ Data-Validator-*
 Makefile*
 !Makefile.PL
 *blib
-MYMETA.yml
-META.yml
+MYMETA.*
+META.*
 inc/
 *.out
 *.bak
