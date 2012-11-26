@@ -1,8 +1,8 @@
 Revision history for Perl extension Data::Validator
 
-[NEXT] 2012-11-26 15:43:11
+1.01 2012-11-26 15:43:11
     [INCOMPATIBLE CHANGE]
-    - Deals with arguments in named style are NOT available in StrictSequenced since this version.
+    - Named-style arguments are NOT available in StrictSequenced since this version (karupanerura)
 
 1.00 2012-10-20 20:58:51
     - Bump version to 1.00.
