@@ -482,7 +482,7 @@ arguments by the order of argument rules, instead of by-name.
 
 =head3 INCOMPATIBLE CHANGE
 
-Deals with arguments in named style are NOT available in StrictSequenced.
+Deals with arguments in named style are NOT available in StrictSequenced since version [NEXT].
 
 =head2 Sequenced
 
