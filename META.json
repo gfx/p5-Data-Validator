@@ -70,7 +70,7 @@
          "web" : "https://github.com/gfx/p5-Data-Validator"
       }
    },
-   "version" : "1.02",
+   "version" : "1.03",
    "x_contributors" : [
       "karupanerura <karupa@cpan.org>",
       "Fuji, Goro <fuji.goro@dena.jp>",

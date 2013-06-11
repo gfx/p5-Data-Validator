@@ -2,6 +2,11 @@ Revision history for Perl extension Data::Validator
 
 {{$NEXT}}
 
+1.03 2013-06-11T07:09:44Z
+    [FEATURES]
+    - Add Data::Validator::Role::NoRestricted not to make the args restricted
+     (thanks to keigow for the request)
+
 1.02 2012-11-26 16:23:33
     [DOCUMENT]
     - fix documents about StrictSequenced
