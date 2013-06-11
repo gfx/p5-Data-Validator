@@ -517,6 +517,10 @@ attribute:
 Does not report stack backtraces on errors, i.e. uses C<croak()> instead
 of C<confess()> to throw errors.
 
+=head2 NoRestricted
+
+Does not make the argument hash restricted.
+
 =head1 DEPENDENCIES
 
 Perl 5.8.1 or later.
@@ -538,6 +542,8 @@ L<Sub::Args>
 L<MooseX::Params::Validate>
 
 L<Mouse>
+
+L<Hash::Util> for a restricted hash.
 
 =head1 AUTHOR
 
