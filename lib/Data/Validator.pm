@@ -271,6 +271,8 @@ sub apply_type_constraint {
 __PACKAGE__->meta->make_immutable;
 __END__
 
+=for stopwords invocant validators backtrace
+
 =head1 NAME
 
 Data::Validator - Rule based validator on type constraint system
@@ -451,11 +453,11 @@ This is not yet used anywhere.
 
 Finds the rule named I<$name>. Provided for error handling.
 
-=head2 C<< $validator->with(@extentions) :Validator >>
+=head2 C<< $validator->with(@extensions) :Validator >>
 
-Applies I<@extentions> to I<$validator> and returns itself.
+Applies I<@extensions> to I<$validator> and returns itself.
 
-See L</EXTENTIONS> for details.
+See L</EXTENSIONS> for details.
 
 =head2 C<< $validator->validate(@args) :HashRef >>
 
@@ -464,9 +466,9 @@ Validates I<@args> and returns a restricted HASH reference.
 Restricted hashes are hashes which do not allow to access non-existing keys,
 so you must check a key C<exists> in the hash before fetching its values.
 
-=head1 EXTENTIONS
+=head1 EXTENSIONS
 
-There are extentions which changes behaviours of C<validate()>.
+There are extensions which changes behaviours of C<validate()>.
 
 =head2 Method
 
@@ -514,7 +516,7 @@ attribute:
 
 =head2 Croak
 
-Does not report stack backtraces on errors, i.e. uses C<croak()> instead
+Does not report stack backtrace on errors, i.e. uses C<croak()> instead
 of C<confess()> to throw errors.
 
 =head2 NoRestricted

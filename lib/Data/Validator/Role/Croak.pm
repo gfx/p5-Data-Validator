@@ -13,9 +13,11 @@ no Mouse::Role;
 1;
 __END__
 
+=for stopwords backtrace
+
 =head1 NAME
 
-Data::Validator::Role::Croak - Does not report stack backtrace on errors
+Data::Validator::Role::Croak - Does not report backtrace on errors
 
 =cut
 

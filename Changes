@@ -1,5 +1,7 @@
 Revision history for Perl extension Data::Validator
 
+{{$NEXT}}
+
 1.02 2012-11-26 16:23:33
     [DOCUMENT]
     - fix documents about StrictSequenced

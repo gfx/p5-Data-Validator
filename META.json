@@ -1,0 +1,79 @@
+{
+   "abstract" : "Rule based validator on type constraint system",
+   "author" : [
+      "Fuji, Goro (gfx) <gfuji@cpan.org>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Minilla/v0.4.5, CPAN::Meta::Converter version 2.131490",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Data-Validator",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "xt",
+         "inc",
+         "share",
+         "eg",
+         "examples",
+         "author"
+      ]
+   },
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "6.59"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "CPAN::Meta" : "0",
+            "CPAN::Meta::Prereqs" : "0",
+            "Module::Build" : "0.38"
+         }
+      },
+      "develop" : {
+         "requires" : {
+            "Test::CPAN::Meta" : "0",
+            "Test::MinimumVersion" : "0.10108",
+            "Test::Pod" : "1.41",
+            "Test::Spellunker" : "v0.2.7"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Mouse" : "0.93",
+            "perl" : "5.008001"
+         }
+      },
+      "test" : {
+         "requires" : {
+            "Test::More" : "0.88",
+            "Test::Requires" : "0"
+         }
+      }
+   },
+   "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/gfx/p5-Data-Validator/issues"
+      },
+      "homepage" : "https://github.com/gfx/p5-Data-Validator",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/gfx/p5-Data-Validator.git",
+         "web" : "https://github.com/gfx/p5-Data-Validator"
+      }
+   },
+   "version" : "1.02",
+   "x_contributors" : [
+      "karupanerura <karupa@cpan.org>",
+      "Fuji, Goro <fuji.goro@dena.jp>",
+      "Fuji, Goro <g.psy.va@gmail.com>"
+   ]
+}

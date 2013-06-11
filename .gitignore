@@ -24,3 +24,10 @@ cover_db*
 *.gcno
 *.gcov
 *.stackdump
+/Data-Validator-*
+/.build
+/_build_params
+/Build
+!Build/
+!META.json
+!LICENSE
