@@ -4,7 +4,7 @@
       "Fuji, Goro (gfx) <gfuji@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v0.4.5, CPAN::Meta::Converter version 2.131490",
+   "generated_by" : "Minilla/v0.10.0, CPAN::Meta::Converter version 2.132830",
    "license" : [
       "perl_5"
    ],
@@ -21,7 +21,8 @@
          "share",
          "eg",
          "examples",
-         "author"
+         "author",
+         "builder"
       ]
    },
    "prereqs" : {
@@ -70,7 +71,7 @@
          "web" : "https://github.com/gfx/p5-Data-Validator"
       }
    },
-   "version" : "1.03",
+   "version" : "1.04",
    "x_contributors" : [
       "karupanerura <karupa@cpan.org>",
       "Fuji, Goro <fuji.goro@dena.jp>",

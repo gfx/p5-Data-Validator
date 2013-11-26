@@ -4,7 +4,7 @@ Data::Validator - Rule based validator on type constraint system
 
 # VERSION
 
-This document describes Data::Validator version 1.03.
+This document describes Data::Validator version 1.04.
 
 # SYNOPSIS
 

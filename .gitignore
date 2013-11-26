@@ -25,6 +25,7 @@ cover_db*
 *.gcov
 *.stackdump
 /Data-Validator-*
+/_build
 /.build
 /_build_params
 /Build

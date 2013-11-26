@@ -2,6 +2,11 @@ Revision history for Perl extension Data::Validator
 
 {{$NEXT}}
 
+1.04 2013-11-26T13:34:13Z
+    [BUG FIXES]
+    - Fix an issue that sharing parameters threw cryptic errors
+      (@hirobanex++)
+
 1.03 2013-06-11T07:09:44Z
     [FEATURES]
     - Add Data::Validator::Role::NoRestricted not to make the args restricted
