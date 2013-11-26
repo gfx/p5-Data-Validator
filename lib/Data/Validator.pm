@@ -31,48 +31,52 @@ sub BUILDARGS {
     my %xor;
 
     my @rules;
-    while(my($name, $rule) = splice @mapping, 0, 2) {
-        if(!Mouse::Util::TypeConstraints::HashRef($rule)) {
-            $rule = { isa => $rule };
+    while(my($name, $rule_ref) = splice @mapping, 0, 2) {
+        my %rule;
+        if(!Mouse::Util::TypeConstraints::HashRef($rule_ref)) {
+            %rule = (isa => $rule_ref);
+        }
+        else {
+            %rule = %{$rule_ref}
         }
 
         # validate the rule
         my $used = 0;
         foreach my $attr(keys %rule_attrs) {
-            exists($rule->{$attr}) and $used++;
+            exists($rule{$attr}) and $used++;
         }
-        if($used < keys %{$rule}) {
-            my @unknowns = grep { not exists $rule_attrs{$_} }  keys %{$rule};
+        if($used < keys %rule) {
+            my @unknowns = grep { not exists $rule_attrs{$_} }  sort keys %rule;
             Carp::croak("Wrong definition for '$name':"
                 . ' Unknown attributes: '
                 . Mouse::Util::quoted_english_list(@unknowns) );
         }
 
         # setup the rule
-        if(defined $rule->{xor}) {
-            my @xors = Mouse::Util::TypeConstraints::ArrayRef($rule->{xor})
-                    ? @{$rule->{xor}}
-                    :  ($rule->{xor});
-            $xor{$name} = $rule->{xor} = \@xors;
+        if(defined $rule{xor}) {
+            my @xors = Mouse::Util::TypeConstraints::ArrayRef($rule{xor})
+                    ? @{$rule{xor}}
+                    :  ($rule{xor});
+            $xor{$name} = $rule{xor} = \@xors;
         }
 
-        if(defined $rule->{isa}) {
-            $rule->{type} = _isa_tc(delete $rule->{isa});
+        if(defined $rule{isa}) {
+            $rule{type} = _isa_tc(delete $rule{isa});
         }
-        if(defined $rule->{does}) {
-            defined($rule->{type})
+        if(defined $rule{does}) {
+            defined($rule{type})
                 and Carp::croak("Wrong definition for '$name':"
                     . q{ You cannot use 'isa' and 'does' together});
-            $rule->{type} = _does_tc(delete $rule->{does});
+            $rule{type} = _does_tc(delete $rule{does});
         }
 
-        if(defined $rule->{type} && not defined $rule->{coerce}) {
-            $rule->{coerce} = $rule->{type}->has_coercion;
+        if(defined $rule{type} && not defined $rule{coerce}) {
+            $rule{coerce} = $rule{type}->has_coercion;
         }
 
-        $rule->{name} = $name;
+        $rule{name} = $name;
 
-        push @rules, $rule;
+        push @rules, \%rule;
     }
 
     # to check xor first and only once, move xor configuration into front rules
