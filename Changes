@@ -2,6 +2,10 @@ Revision history for Perl extension Data::Validator
 
 {{$NEXT}}
 
+1.06 2014-07-15T13:19:35Z
+    [NEW FEATURES]
+    - Add Data::Validator::Role::SmartSequence
+
 1.04 2013-11-26T13:34:13Z
     [BUG FIXES]
     - Fix an issue that sharing parameters threw cryptic errors

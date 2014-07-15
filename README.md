@@ -4,7 +4,7 @@ Data::Validator - Rule based validator on type constraint system
 
 # VERSION
 
-This document describes Data::Validator version 1.04.
+This document describes Data::Validator version 1.06.
 
 # SYNOPSIS
 
@@ -64,7 +64,38 @@ This document describes Data::Validator version 1.04.
         my($self, $args) = $rule->validate(@_);
         # ...
     }
-    Foo->seq_method( 'bar' ); # seq() will get { foo => 'bar' }
+    Foo->seq_method( 'bar' ); # seq_method() will get { foo => 'bar' }
+
+
+
+    # using sequenced and named parameters
+    sub smart_seq {
+        my $rule = Data::Validator->new(
+            r1 => 'Str',
+            r2 => 'HashRef',  # accept this
+            o1 => { isa => 'Str', default => 'yes' },
+            o2 => { isa => 'Num', optional => 1 },
+        )->with('SmartSequenced');
+
+        my $args = $rule->validate(@_);
+        # ...
+    }
+
+    # all will get { r1 => 'foo', r2 => { val => 'bar' }, o1 => 'yes' }
+
+    # mixed style(recommend)
+    smart_seq( 'foo', { val => 'bar' }, { o1 => 'yes' } );
+    smart_seq( 'foo', { val => 'bar' } );
+
+    # also accept sequenced style
+    smart_seq( 'foo', { val => 'bar' }, 'yes' );
+    smart_seq( 'foo', { val => 'bar' } );
+
+    # also accept named style
+    smart_seq( { r1 => 'foo', r2 => { val => 'bar' }, o1 => 'yes' } );
+    smart_seq( { r1 => 'foo', r2 => { val => 'bar' } } );
+
+
 
 # DESCRIPTION
 
@@ -176,7 +207,7 @@ Finds the rule named _$name_. Provided for error handling.
 
 Applies _@extensions_ to _$validator_ and returns itself.
 
-See ["EXTENSIONS"](#EXTENSIONS) for details.
+See ["EXTENSIONS"](#extensions) for details.
 
 ## `$validator->validate(@args) :HashRef`
 
@@ -195,6 +226,15 @@ Takes the first argument as an invocant (i.e. class or object instance),
 and returns it as the first value:
 
     my($invocant, $args) = $rule->validate(@_);
+
+## SmartSequenced
+
+Deals with arguments in mixing sequenced style and named style.
+The sequenced style should be passed by the order of argument rules,
+and the named style arguments should be the last argument as HASH ref.
+
+The typical usage is that the required arguments as sequenced style,
+and some optional arguments as named style.
 
 ## StrictSequenced
 
@@ -254,17 +294,17 @@ to cpan-RT.
 
 # SEE ALSO
 
-[Smart::Args](http://search.cpan.org/perldoc?Smart::Args)
+[Smart::Args](https://metacpan.org/pod/Smart::Args)
 
-[Params::Validate](http://search.cpan.org/perldoc?Params::Validate)
+[Params::Validate](https://metacpan.org/pod/Params::Validate)
 
-[Sub::Args](http://search.cpan.org/perldoc?Sub::Args)
+[Sub::Args](https://metacpan.org/pod/Sub::Args)
 
-[MooseX::Params::Validate](http://search.cpan.org/perldoc?MooseX::Params::Validate)
+[MooseX::Params::Validate](https://metacpan.org/pod/MooseX::Params::Validate)
 
-[Mouse](http://search.cpan.org/perldoc?Mouse)
+[Mouse](https://metacpan.org/pod/Mouse)
 
-[Hash::Util](http://search.cpan.org/perldoc?Hash::Util) for a restricted hash.
+[Hash::Util](https://metacpan.org/pod/Hash::Util) for a restricted hash.
 
 # AUTHOR
 
