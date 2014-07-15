@@ -481,6 +481,15 @@ and returns it as the first value:
 
     my($invocant, $args) = $rule->validate(@_);
 
+=head2 SmartSequenced
+
+Deals with arguments in mixing sequenced style and named style.
+The sequenced style should be passed by the order of argument rules,
+and the named style arguments should be the last argument as HASH ref.
+
+The typical usage is that the required arguments as sequenced style,
+and some optional arguments as named style.
+
 =head2 StrictSequenced
 
 Deals with arguments in sequenced style, where users should pass
