@@ -341,7 +341,36 @@ This document describes Data::Validator version 1.04.
         my($self, $args) = $rule->validate(@_);
         # ...
     }
-    Foo->seq_method( 'bar' ); # seq() will get { foo => 'bar' }
+    Foo->seq_method( 'bar' ); # seq_method() will get { foo => 'bar' }
+
+
+    # using sequenced and named parameters
+    sub smart_seq {
+        my $rule = Data::Validator->new(
+            r1 => 'Str',
+            r2 => 'HashRef',  # accept this
+            o1 => { isa => 'Str', default => 'yes' },
+            o2 => { isa => 'Num', optional => 1 },
+        )->with('SmartSequenced');
+
+        my $args = $rule->validate(@_);
+        # ...
+    }
+
+    # all will get { r1 => 'foo', r2 => { val => 'bar' }, o1 => 'yes' }
+
+    # mixed style(recommend)
+    smart_seq( 'foo', { val => 'bar' }, { o1 => 'yes' } );
+    smart_seq( 'foo', { val => 'bar' } );
+
+    # also accept sequenced style
+    smart_seq( 'foo', { val => 'bar' }, 'yes' );
+    smart_seq( 'foo', { val => 'bar' } );
+
+    # also accept named style
+    smart_seq( { r1 => 'foo', r2 => { val => 'bar' }, o1 => 'yes' } );
+    smart_seq( { r1 => 'foo', r2 => { val => 'bar' } } );
+
 
 =head1 DESCRIPTION
 
@@ -480,6 +509,15 @@ Takes the first argument as an invocant (i.e. class or object instance),
 and returns it as the first value:
 
     my($invocant, $args) = $rule->validate(@_);
+
+=head2 SmartSequenced
+
+Deals with arguments in mixing sequenced style and named style.
+The sequenced style should be passed by the order of argument rules,
+and the named style arguments should be the last argument as HASH ref.
+
+The typical usage is that the required arguments as sequenced style,
+and some optional arguments as named style.
 
 =head2 StrictSequenced
 
