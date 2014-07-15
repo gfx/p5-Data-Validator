@@ -341,7 +341,7 @@ This document describes Data::Validator version 1.04.
         my($self, $args) = $rule->validate(@_);
         # ...
     }
-    Foo->seq_method( 'bar' ); # seq() will get { foo => 'bar' }
+    Foo->seq_method( 'bar' ); # seq_method() will get { foo => 'bar' }
 
 
     # using sequenced and named parameters
