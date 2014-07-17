@@ -104,4 +104,14 @@ is_deeply $args, { foo => 42, baz => 2.72 }, 'required as hashref';
 $args = $v->validate({ foo => 3.14, bar => 2.0, baz => 2.718 });
 is_deeply $args, { foo => 3.14, bar => 2.0, baz => 2.718 }, 'all as hashref';
 
+note 'SmartSequenced - the last optional hashref';
+$v = Data::Validator->new(
+    foo => 'Num',
+    bar => { isa => 'HashRef', optional => 1 },
+)->with('SmartSequenced');
+my $expected = { foo => 3, bar => { val => 3 } };
+is_deeply $v->validate( 3, { bar => { val => 3 } } ), $expected, 'mixed style';
+is_deeply $v->validate( 3, { val => 3 } ), $expected, 'sequenced style';
+is_deeply $v->validate( { foo => 3, bar => { val => 3 } } ), $expected, 'named style';
+
 done_testing;

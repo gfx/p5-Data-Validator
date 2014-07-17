@@ -8,7 +8,7 @@ around initialize => sub {
 
     my %args;
     if( @_ and Mouse::Util::TypeConstraints::HashRef($_[-1])
-        and @_ != grep { not $_->{optional} and not exists $_->{default} and not exists $_[-1]->{$_->{name}} } @{$self->rules} )
+        and keys %{ $_[-1] } == grep { exists $_[-1]->{ $_->{name} } } @{ $self->rules } )
     {
         %args = %{ pop @_ };
     }
