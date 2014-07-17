@@ -2,9 +2,13 @@ Revision history for Perl extension Data::Validator
 
 {{$NEXT}}
 
+1.07 2014-07-17T14:05:12Z
+    [BUG FIXES]
+    - Fix a wrong expansion in the case of the last optional hashref (#7 robario)
+
 1.06 2014-07-15T13:19:35Z
     [NEW FEATURES]
-    - Add Data::Validator::Role::SmartSequenced
+    - Add Data::Validator::Role::SmartSequenced (#5 robario)
 
 1.04 2013-11-26T13:34:13Z
     [BUG FIXES]
