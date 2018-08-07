@@ -125,6 +125,7 @@ sub validate {
     my %skip;
     my @errors;
     my @missing;
+    my @defaults;
     my $nargs = scalar keys %{$args};
     my $used  = 0;
     my $rules = $self->rules;
@@ -164,16 +165,28 @@ sub validate {
             $used++;
         }
         elsif(exists $rule->{default}) {
-            my $default = $rule->{default};
-            $args->{$name} = Mouse::Util::TypeConstraints::CodeRef($default)
-                ? $default->($self, $rule, $args)
-                : $default;
+            push @defaults, $rule;
         }
         elsif(!$rule->{optional}) {
             push @missing, $rule;
         }
     }
 
+    foreach my $rule (@defaults) {
+        my $name = $rule->{name};
+
+        next if (exists $skip{$name}
+                || grep {
+                        $_->{name} eq $name
+                        || (exists $_->{conflict} && $_->{conflict} eq $name)
+                    } @errors);
+
+        my $default = $rule->{default};
+
+        $args->{$name} = Mouse::Util::TypeConstraints::CodeRef($default)
+            ? $default->($self, $rule, $args)
+            : $default;
+    }
 
     if(@missing) {
         MISSING: foreach my $rule(@missing) {
