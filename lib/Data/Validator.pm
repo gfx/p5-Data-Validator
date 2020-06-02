@@ -21,7 +21,7 @@ no Mouse;
 my %rule_attrs = map { $_ => undef }qw(
     isa does coerce
     default optional
-    xor
+    xor or
     documentation
 );
 
@@ -125,6 +125,8 @@ sub validate {
     my %skip;
     my @errors;
     my @missing;
+    my @defaults;
+    my @or;
     my $nargs = scalar keys %{$args};
     my $used  = 0;
     my $rules = $self->rules;
@@ -164,16 +166,43 @@ sub validate {
             $used++;
         }
         elsif(exists $rule->{default}) {
-            my $default = $rule->{default};
-            $args->{$name} = Mouse::Util::TypeConstraints::CodeRef($default)
-                ? $default->($self, $rule, $args)
-                : $default;
+            push @defaults, $rule;
+        }
+        elsif(exists $rule->{or}) {
+            push @or, $rule;
         }
         elsif(!$rule->{optional}) {
             push @missing, $rule;
         }
     }
 
+    foreach my $rule (@defaults) {
+        my $name = $rule->{name};
+
+        next if (exists $skip{$name}
+                || grep {
+                        $_->{name} eq $name
+                        || (exists $_->{conflict} && $_->{conflict} eq $name)
+                    } @errors);
+
+        my $default = $rule->{default};
+
+        $args->{$name} = Mouse::Util::TypeConstraints::CodeRef($default)
+            ? $default->($self, $rule, $args)
+            : $default;
+    }
+
+    foreach my $rule (@or) {
+        if(!exists $args->{$rule->{name}} && ! grep { exists $args->{$_}; } @{ $rule->{or} }) {
+            push @errors, $self->make_error(
+                type     => 'SelectiveParameter',
+                message  => "Selective parameters not passed any one: "
+                            . join(' or ', @{ $rule->{or} }),
+                name     => $rule->{name},
+                others   => $rule->{or},
+            );
+        }
+    }
 
     if(@missing) {
         MISSING: foreach my $rule(@missing) {
@@ -198,7 +227,6 @@ sub validate {
             );
         }
     }
-
 
     if($used < $nargs) {
         my %unknowns = $self->unknown_parameters($rules, $args);
